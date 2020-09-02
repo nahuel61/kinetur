@@ -7,6 +7,11 @@ import (
 	"os"
 )
 
+type application struct {
+	errorLog *log.Logger
+	infoLog *log.Logger
+}
+
 func main() {
 	//defino la direccion default
 	addr := flag.String("addr", ":4000", "HTTP network address")
@@ -18,21 +23,23 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
+	app := &application{
+		errorLog: errorLog,
+		infoLog: infoLog,
+	}
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/register", crearUsuario)
-	mux.HandleFunc("/login", iniciarSesion)
 
-
-	//crea un servidor de archivos estaticos q estan alojados en ./iu/static
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
-
+	//configuro strcutura del http.server
+	srv := &http.Server{
+		Addr: *addr,
+		ErrorLog: errorLog,
+		Handler: app.routes(),
+	}
 
 
 	//escribo los mensajes de info y error en cada uno de los logs
 	infoLog.Printf("Starting server on %s", *addr)
-	err := http.ListenAndServe(*addr, mux)
+
+	err := srv.ListenAndServe()
 	errorLog.Fatal(err)
 }
