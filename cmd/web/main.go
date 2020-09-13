@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -13,9 +14,10 @@ import (
 )
 
 type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	users    *mysql.UsersModel //con esto permito que este disponible para el handler
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	users         *mysql.UsersModel //con esto permito que este disponible para el handler
+	templateCache map[string]*template.Template
 }
 
 func main() {
@@ -33,12 +35,19 @@ func main() {
 	if err != nil {
 		errorLog.Fatal(err)
 	}
-	defer db.Close()
+	//defer db.Close()
 
+	// Initialize a new template cache...
+	templateCache, err := newTemplateCache("./ui/html/")
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+	// And add it to the application dependencies.
 	app := &application{
-		errorLog: errorLog,
-		infoLog:  infoLog,
-		users:    &mysql.UsersModel{DB: db},
+		errorLog:      errorLog,
+		infoLog:       infoLog,
+		users:         &mysql.UsersModel{DB: db},
+		templateCache: templateCache,
 	}
 
 	//configuro strcutura del http.server
