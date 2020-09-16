@@ -16,6 +16,7 @@ import (
 // to it as the build progresses.
 type templateData struct {
 	Año      int
+	Flash    string
 	Form     *forms.Form
 	Usuario  *models.User
 	Usuarios []*models.User

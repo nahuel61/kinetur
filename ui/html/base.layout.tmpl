@@ -45,6 +45,9 @@
 
 
     <section>
+        {{with .Flash}}
+        <div class='flash '>{{.}}</div>
+        {{end}}
         {{template "body" .}}
     </section>
     <!-- Invoke the footer template -->

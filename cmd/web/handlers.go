@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"tp-ISA-go.org/kinetur/pkg/forms"
 	"tp-ISA-go.org/kinetur/pkg/models"
@@ -94,7 +93,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	form.MinLength("dni", 8)
 	form.MinLength("password", 8)
 
-	// Isi hay un error vuelvo a mostrar el formulario
+	// si hay un error vuelvo a mostrar el formulario
 	if !form.Valid() {
 		app.render(w, r, "signup.page.tmpl", &templateData{Form: form})
 		return
@@ -112,18 +111,43 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	}
 	// Otherwise add a confirmation flash message to the session confirming tha
 	// their signup worked and asking them to log in.
-	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
+	app.session.Put(r, "flash", "Your signup was successful. Please log in.")
 
 	// And redirect the user to the login page.
 	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 }
 
 func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Display the user login form...")
+	app.render(w, r, "login.page.tmpl", &templateData{
+		Form: forms.New(nil),
+	})
 }
 func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Authenticate and login the user...")
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	} // Check whether the credentials are valid. If they're not, add a generic e
+	// message to the form failures map and re-display the login page.
+	form := forms.New(r.PostForm)
+	id, err := app.users.Authenticate(form.Get("email"), form.Get("password"))
+	if err == models.ErrInvalidCredentials {
+		form.Errors.Add("generic", "Email o Password incorrectos")
+		app.render(w, r, "login.page.tmpl", &templateData{Form: form})
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+		return
+	} // Add the ID of the current user to the session, so that they are now 'logg
+	// in'.
+	app.session.Put(r, "userID", id)
+	// Redirect the user to the create snippet page.
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Logout the user...")
+	// Remove the userID from the session data so that the user is 'logged out'
+	app.session.Remove(r, "userID")
+	// Add a flash message to the session to confirm to the user that they've be
+	app.session.Put(r, "flash", "You've been logged out successfully!")
+	http.Redirect(w, r, "/", 303)
 }
