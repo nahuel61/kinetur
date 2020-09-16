@@ -2,39 +2,31 @@ package main
 
 import (
 	"fmt"
-	_ "fmt"
-	"html/template"
 	"net/http"
-	"strconv"
+	"tp-ISA-go.org/kinetur/pkg/forms"
+	"tp-ISA-go.org/kinetur/pkg/models"
+	_ "tp-ISA-go.org/kinetur/pkg/models"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		app.notFound(w)
-		return
-	}
 
-	app.render(w, r, "home.page.tmpl")
+	app.render(w, r, "home.page.tmpl", nil)
 }
+
+/*
 func (app *application) crearUsuario(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/register" {
-		app.notFound(w)
-		return
-	}
 
-	if r.Method != "POST" {
-		return
-	}
-
-	nombre := "Nahuel"
-	apellido := "Salazar"
-	dni := "32424219"
+	nombre := "juan"
+	apellido := "Perez"
+	dni := "32425219"
 
 	id, err := app.users.Insert(nombre, apellido, dni)
 	if err != nil {
 		app.serverError(w, err)
+		return
 	}
-	http.Redirect(w, r, fmt.Sprintf("/"), http.StatusSeeOther)
+
+	http.Redirect(w, r, fmt.Sprintf("/user/%d",id), http.StatusSeeOther)
 
 	id, err = strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
@@ -43,20 +35,7 @@ func (app *application) crearUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Include the footer partial in the template files.
-	files := []string{
-		"./ui/html/register.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	err = ts.Execute(w, nil)
-	if err != nil {
-		app.serverError(w, err)
-	}
+	app.render(w, r, "signup.page.tmpl", nil)
 }
 
 func (app *application) iniciarSesion(w http.ResponseWriter, r *http.Request) {
@@ -66,41 +45,85 @@ func (app *application) iniciarSesion(w http.ResponseWriter, r *http.Request) {
 	}
 	//Include the footer partial in the template files.
 
-	app.render(w, r, "login.page.tmpl")
+	app.render(w, r, "login.page.tmpl", nil)
 }
 
 func (app *application) mostrarUsuario(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/user" {
-		app.notFound(w)
-		return
-	}
 
-	s, err := app.users.Latest()
-
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
 	if err != nil || id < 1 {
 		app.notFound(w)
 		return
 	}
 
-	data := &templateData{Usuarios: s}
-
-	files := []string{
-		"./ui/html/show.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
-	ts, err := template.ParseFiles(files...)
-
-	if err != nil {
+	_, err = app.users.Get(id)
+	if err == models.ErrNoRecord {
+		app.notFound(w)
+		return
+	} else if err != nil {
 		app.serverError(w, err)
 		return
 	}
-	err = ts.Execute(w, data)
-	if err != nil {
-		app.serverError(w, err)
-	}
 
 	// Use the new render helper.
-	app.render(w, r, "show.page.tmpl")
+	app.render(w, r, "show.page.tmpl" , &templateData{Usuarios: nil })
+}
+
+func(app *application) crearUsuarioForm( w http.ResponseWriter, r *http.Request){
+	w.Write([]byte("Crear un nuevo usuario..."))
+}
+*/
+
+func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "signup.page.tmpl", &templateData{
+		Form: forms.New(nil),
+	})
+
+}
+func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	//validacion de los datos de usuario
+	form := forms.New(r.PostForm)
+	form.Required("tipo", "nombre", "apellido", "dni", "domicilio", "email", "password")
+	form.MatchesPattern("email", forms.EmailRX)
+	form.MinLength("dni", 8)
+	form.MinLength("password", 8)
+
+	// Isi hay un error vuelvo a mostrar el formulario
+	if !form.Valid() {
+		app.render(w, r, "signup.page.tmpl", &templateData{Form: form})
+		return
+	}
+	// Try to create a new user record in the database. If the email already exi
+	// add an error message to the form and re-display it.
+	err = app.users.Insert(form.Get("tipo"), form.Get("nombre"), form.Get("apellido"), form.Get("dni"), form.Get("domicilio"), form.Get("email"), form.Get("password"))
+	if err == models.ErrDuplicateEmail {
+		form.Errors.Add("email", "Address is already in use")
+		app.render(w, r, "signup.page.tmpl", &templateData{Form: form})
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	// Otherwise add a confirmation flash message to the session confirming tha
+	// their signup worked and asking them to log in.
+	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
+
+	// And redirect the user to the login page.
+	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+}
+
+func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Display the user login form...")
+}
+func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Authenticate and login the user...")
+}
+func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Logout the user...")
 }

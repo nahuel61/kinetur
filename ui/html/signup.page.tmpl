@@ -1,0 +1,60 @@
+{{template "base" .}}
+{{define "title"}}Registrarse{{end}}
+{{define "body"}}
+<form action='/user/signup' method='POST' novalidate>
+    {{with .Form}}
+    <div>
+                <label>Tipo:</label>
+                {{with .Errors.Get "tipo"}}
+                    <label class='error'>{{.}}</label>
+                {{end}}
+                <input type='text' name='tipo' value='{{.Get "tipo"}}'>
+        </div>
+    <div>
+        <label>Nombre:</label>
+        {{with .Errors.Get "nombre"}}
+            <label class='error'>{{.}}</label>
+        {{end}}
+        <input type='text' name='nombre' value='{{.Get "nombre"}}'>
+    </div>
+    <div>
+            <label>Apellido:</label>
+            {{with .Errors.Get "apellido"}}
+                <label class='error'>{{.}}</label>
+            {{end}}
+            <input type='text' name='apellido' value='{{.Get "apellido"}}'>
+    </div>
+    <div>
+            <label>DNI:</label>
+            {{with .Errors.Get "dni"}}
+                <label class='error'>{{.}}</label>
+            {{end}}
+            <input type='text' name='dni' value='{{.Get "dni"}}'>
+    </div>
+    <div>
+                <label>Domicilio:</label>
+                {{with .Errors.Get "domicilio"}}
+                    <label class='error'>{{.}}</label>
+                {{end}}
+                <input type='text' name='domicilio' value='{{.Get "domicilio"}}'>
+        </div>
+    <div>
+        <label>Email:</label>
+        {{with .Errors.Get "email"}}
+        <label class='error'>{{.}}</label>
+        {{end}}
+        <input type='email' name='email' value='{{.Get "email"}}'>
+    </div>
+    <div>
+        <label>Password:</label>
+        {{with .Errors.Get "password"}}
+        <label class='error'>{{.}}</label>
+        {{end}}
+    <input type='password' name='password'>
+    </div>
+    <div>
+        <input type='submit' value='Registrarse'>
+    </div>
+    {{end}}
+</form>
+{{end}}

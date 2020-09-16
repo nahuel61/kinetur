@@ -25,16 +25,18 @@
     <div class="container">
     <header>
         <nav class="navbar navbar-expand-lg navbar-ligth bg-light " >
-            <a class="navbar-brand" href='/'>TURNOS</a>
+            <a class="navbar-brand" >TURNOS</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <a class="nav-link active" href='/'>Home</a>
-                    <!--<a class="nav-link" href="/register">Registrarse</a>-->
-                    <a class="nav-link" href="/login">Iniciar sesion</a>
-                    <a class="nav-link" href="/user?id=1">usuario</a>
+                    <a class="nav-link" href="/user/signup">Registrarse</a>
+                    <a class="nav-link" href="/user/login">Iniciar Sesion</a>
+                    <form action="/user/logout" method=POST>
+                    <button>Cerrar Sesion</button>
+                    </form>
                 </div>
             </div>
         </nav>

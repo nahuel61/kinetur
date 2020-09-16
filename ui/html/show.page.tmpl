@@ -2,7 +2,7 @@
 {{define "title"}}Usuarios {{end}}
 {{define "body"}}
 <div>
-    {{if .Usuarios}}
+{{if .Usuarios}}
     <table>
         <tr>
             <th>ID</th>
@@ -12,13 +12,15 @@
         </tr>
         {{range .Usuarios}}
         <tr>
-            <th>{{.ID}}</th>
-            <th>{{.DNI}}</th>
+            <th>{{.id}}</th>
+            <th>{{.dni}}</th>
             <th>{{.Nombre}}</th>
             <th>{{.Apellido}}</th>
         </tr>
-            {{end}}
+{{end}}
     </table>
+{{else}}
+<p> no paso nada</p>
 {{end}}
 </div>
 {{end}}

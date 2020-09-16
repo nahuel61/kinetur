@@ -2,14 +2,23 @@ package models
 
 import (
 	"errors"
-	_ "time"
+	"time"
 )
 
-var ErrNoRecord = errors.New("models: no matching record found")
+var (
+	ErrNoRecord           = errors.New("models: no matching record found")
+	ErrInvalidCredentials = errors.New("models: invalid credentials")
+	ErrDuplicateEmail     = errors.New("models: duplicate email")
+)
 
-type Users struct {
-	ID       int
-	Nombre   string
-	Apellido string
-	DNI      int
+type User struct {
+	ID        int
+	Tipo      string
+	Nombre    string
+	Apellido  string
+	DNI       int
+	Domicilio string
+	Email     string
+	Password  []byte
+	Created   time.Time
 }

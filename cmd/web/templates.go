@@ -3,6 +3,10 @@ package main
 import (
 	"html/template" // New import
 	"path/filepath"
+
+	_ "time"
+
+	"tp-ISA-go.org/kinetur/pkg/forms"
 	"tp-ISA-go.org/kinetur/pkg/models"
 )
 
@@ -11,8 +15,10 @@ import (
 // At the moment it only contains one field, but we'll add more
 // to it as the build progresses.
 type templateData struct {
-	Usuario  *models.Users
-	Usuarios []*models.Users
+	Año      int
+	Form     *forms.Form
+	Usuario  *models.User
+	Usuarios []*models.User
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {

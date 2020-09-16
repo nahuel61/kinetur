@@ -16,11 +16,12 @@ import (
 type application struct {
 	errorLog      *log.Logger
 	infoLog       *log.Logger
-	users         *mysql.UsersModel //con esto permito que este disponible para el handler
+	users         *mysql.UserModel //con esto permito que este disponible para el handler
 	templateCache map[string]*template.Template
 }
 
 func main() {
+
 	//defino la direccion default
 	dsn := flag.String("dsn", "root:admin@/kinetur?parseTime=true", "Mysql data")
 	addr := flag.String("addr", ":4000", "HTTP network address")
@@ -35,7 +36,7 @@ func main() {
 	if err != nil {
 		errorLog.Fatal(err)
 	}
-	//defer db.Close()
+	defer db.Close()
 
 	// Initialize a new template cache...
 	templateCache, err := newTemplateCache("./ui/html/")
@@ -46,7 +47,7 @@ func main() {
 	app := &application{
 		errorLog:      errorLog,
 		infoLog:       infoLog,
-		users:         &mysql.UsersModel{DB: db},
+		users:         &mysql.UserModel{DB: db},
 		templateCache: templateCache,
 	}
 
