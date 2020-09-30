@@ -3,9 +3,11 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/justinas/nosurf"
 	"net/http"
 	"runtime/debug"
 	"time"
+	"tp-ISA-go.org/kinetur/pkg/models"
 )
 
 // The serverError helper writes an error message and stack trace to the errorLo (debug.stack)
@@ -35,6 +37,7 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 	if td == nil {
 		td = &templateData{}
 	}
+	td.CSRFToken = nosurf.Token(r)
 	td.AuthenticatedUser = app.authenticatedUser(r)
 	td.Año = time.Now().Year()
 	td.Flash = app.session.PopString(r, "flash") //agrego el mensaje a template data, si existe lo muetra.
@@ -69,7 +72,11 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 
 }
 
-// The authenticatedUser method returns the ID of the current user from the session o cero si no esta autenticado
-func (app *application) authenticatedUser(r *http.Request) int {
-	return app.session.GetInt(r, "userID")
+// si el usuario esta autenticado va a responder con la contextkeyuser
+func (app *application) authenticatedUser(r *http.Request) *models.User {
+	user, ok := r.Context().Value(contextKeyUser).(*models.User)
+	if !ok {
+		return nil
+	}
+	return user
 }

@@ -4,17 +4,19 @@ import (
 	"crypto/tls"
 	"database/sql"
 	"flag"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/golangcollege/sessions"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"time"
-
-	"github.com/golangcollege/sessions" // New import
 	"tp-ISA-go.org/kinetur/pkg/models/mysql"
-
-	_ "github.com/go-sql-driver/mysql"
 )
+
+type contextKey string
+
+var contextKeyUser = contextKey("usuario")
 
 type application struct {
 	errorLog      *log.Logger
@@ -46,7 +48,7 @@ func main() {
 	}
 	defer db.Close()
 
-	// Initialize a new template cache...
+	// inicializo el cache de templates
 	templateCache, err := newTemplateCache("./ui/html/")
 	if err != nil {
 		errorLog.Fatal(err)
@@ -56,7 +58,6 @@ func main() {
 	session.Lifetime = 12 * time.Hour
 	session.Secure = true
 
-	// And add it to the application dependencies.
 	app := &application{
 		errorLog:      errorLog,
 		infoLog:       infoLog,
@@ -66,8 +67,7 @@ func main() {
 		//turnos:			&mysql.TurnoModel{DB: db},
 	}
 
-	// Initialize a tls.Config struct to hold the non-default TLS settings we w
-	// the server to use.
+	// Initialize a tls.Config struct to hold the non-default TLS settings we want the server to use.
 	tlsConfig := &tls.Config{
 		PreferServerCipherSuites: true,
 		CurvePreferences:         []tls.CurveID{tls.X25519, tls.CurveP256},

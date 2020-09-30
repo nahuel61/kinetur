@@ -10,7 +10,7 @@ func (app *application) routes() http.Handler {
 	//creacion del middleware que registra todos los "movimientos"
 	standardMiddleware := alice.New(app.logRequest, secureHeaders)
 	//agrego un middleware dinamico para que tome la session. en el otro me quedan los archivos estaticos
-	dynamicMiddleware := alice.New(app.session.Enable)
+	dynamicMiddleware := alice.New(app.session.Enable, noSurf, app.authenticate)
 	//pat sigue el orden
 	//es mas complicado al principio pero cuando crezca al applicacion es mas facil manejar asi los logs de errores
 	mux := pat.New()
