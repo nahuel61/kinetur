@@ -22,6 +22,7 @@ type application struct {
 	users         *mysql.UserModel //con esto permito que este disponible para el handler
 	templateCache map[string]*template.Template
 	session       *sessions.Session //agrego sesion a la struc
+	//turnos 			*mysql.TurnoModel
 }
 
 func main() {
@@ -62,6 +63,7 @@ func main() {
 		users:         &mysql.UserModel{DB: db},
 		templateCache: templateCache,
 		session:       session,
+		//turnos:			&mysql.TurnoModel{DB: db},
 	}
 
 	// Initialize a tls.Config struct to hold the non-default TLS settings we w

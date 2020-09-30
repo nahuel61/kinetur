@@ -22,3 +22,8 @@ type User struct {
 	Password  []byte
 	Created   time.Time
 }
+
+type Turno struct {
+	ID    int
+	Fecha time.Time
+}

@@ -40,8 +40,7 @@ func (m *UserModel) Insert(tipo, nombre, apellido, dni, domicilio, email, passwo
 func (m *UserModel) Authenticate(email, password string) (int, error) {
 	var id int
 	var hashedPassword []byte
-	//TODO esta consulta me rompe el login
-	row := m.DB.QueryRow("select id, password from users where email = ?")
+	row := m.DB.QueryRow("select id, password from users where email = email")
 	err := row.Scan(&id, &hashedPassword)
 	if err == sql.ErrNoRows {
 		return 0, models.ErrInvalidCredentials
@@ -58,11 +57,4 @@ func (m *UserModel) Authenticate(email, password string) (int, error) {
 	}
 	// Otherwise, the password is correct. Return the user ID.
 	return id, nil
-}
-
-//devuelve un usuario basado en su id
-func (m *UserModel) Get(id int) (*models.User, error) {
-
-	return nil, nil
-
 }
