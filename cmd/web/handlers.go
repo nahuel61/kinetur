@@ -111,7 +111,7 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	// Add the ID of the current user to the session, so that they are now 'logged in'.
 	app.session.Put(r, "userID", id)
 	// Redireccion a ver turnos.
-	http.Redirect(w, r, "/user/turn", http.StatusSeeOther)
+	http.Redirect(w, r, "/user/turno", http.StatusSeeOther)
 }
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 	// Remove the userID from the session data so that the user is 'logged out'

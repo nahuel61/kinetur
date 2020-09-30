@@ -13,7 +13,11 @@
                                 atención integral y personalizada en las áreas de Kinesiología y Fisioterapia.</p>
                         </div>
                         <div class="card-footer">
+                        {{if .AuthenticatedUser}}
+                            <a href="/user/turno" class="btn btn-primary">Pedi Turno</a>
+                        {{else}}
                             <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                        {{end}}
                         </div>
                     </div>
                 </div>
@@ -26,7 +30,11 @@
                                 Consulte por nuestra línea de equipamiento.</p>
                         </div>
                         <div class="card-footer">
-                            <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                            {{if .AuthenticatedUser}}
+                                                        <a href="/user/turno" class="btn btn-primary">Pedi Turno</a>
+                                                    {{else}}
+                                                        <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                                                    {{end}}
                         </div>
                     </div>
                 </div>
@@ -39,7 +47,11 @@
                                 transformándose en lo que hoy se conoce como tratamiento funcional de las lesiones.</p>
                         </div>
                         <div class="card-footer">
-                            <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                        {{if .AuthenticatedUser}}
+                                                    <a href="/user/turno" class="btn btn-primary">Pedi Turno</a>
+                                                {{else}}
+                                                    <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                                                {{end}}
                         </div>
                     </div>
                 </div>
@@ -52,7 +64,11 @@
                                 que tiene como objetivo adaptar y/o lograr nuevas conductas del adulto mayor</p>
                         </div>
                         <div class="card-footer">
-                            <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                            {{if .AuthenticatedUser}}
+                                                        <a href="/user/turno" class="btn btn-primary">Pedi Turno</a>
+                                                    {{else}}
+                                                        <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                                                    {{end}}
                         </div>
                     </div>
                 </div>
@@ -67,7 +83,11 @@
                                 una técnica proveniente de la medicina tradicional china</p>
                         </div>
                         <div class="card-footer">
-                            <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                            {{if .AuthenticatedUser}}
+                                                        <a href="/user/turno" class="btn btn-primary">Pedi Turno</a>
+                                                    {{else}}
+                                                        <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                                                    {{end}}
                         </div>
                     </div>
                 </div>
@@ -80,7 +100,11 @@
                                 Es una técnica, mínimamente invasiva, que a través de una aguja</p>
                         </div>
                         <div class="card-footer">
-                            <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                            {{if .AuthenticatedUser}}
+                                                        <a href="/user/turno" class="btn btn-primary">Pedi Turno</a>
+                                                    {{else}}
+                                                        <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                                                    {{end}}
                         </div>
                     </div>
                 </div>
@@ -93,7 +117,11 @@
                                 uterino, radioterapia, insuficiencia venosa- se acumula líquido en alguna</p>
                         </div>
                         <div class="card-footer">
-                            <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                            {{if .AuthenticatedUser}}
+                                                        <a href="/user/turno" class="btn btn-primary">Pedi Turno</a>
+                                                    {{else}}
+                                                        <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                                                    {{end}}
                         </div>
                     </div>
                 </div>
@@ -106,7 +134,11 @@
                                 de evaluación, diagnóstico y tratamiento de patologías que afectan al sistema locomotor.</p>
                         </div>
                         <div class="card-footer">
-                            <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                            {{if .AuthenticatedUser}}
+                                                        <a href="/user/turno" class="btn btn-primary">Pedi Turno</a>
+                                                    {{else}}
+                                                        <a href="/user/login" class="btn btn-primary">Pedi Turno</a>
+                                                    {{end}}
                         </div>
                     </div>
                 </div>

@@ -15,11 +15,12 @@ import (
 // At the moment it only contains one field, but we'll add more
 // to it as the build progresses.
 type templateData struct {
-	Año      int
-	Flash    string
-	Form     *forms.Form
-	Usuario  *models.User
-	Usuarios []*models.User
+	Año               int
+	Flash             string
+	Form              *forms.Form
+	Usuario           *models.User
+	Usuarios          []*models.User
+	AuthenticatedUser int
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
