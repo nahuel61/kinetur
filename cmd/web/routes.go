@@ -23,6 +23,11 @@ func (app *application) routes() http.Handler {
 	mux.Get("/user/logout", dynamicMiddleware.ThenFunc(app.logoutUser))
 	mux.Get("/user/turno", dynamicMiddleware.ThenFunc(app.turnoList))
 
+	//routes de la API
+	mux.Get("/user", dynamicMiddleware.ThenFunc(app.userList))
+	mux.Post("/user", dynamicMiddleware.ThenFunc(app.userCreate))
+	mux.Del("/user/{id}", dynamicMiddleware.ThenFunc(app.userDelete))
+
 	//crea un servidor de archivos estaticos q estan alojados en ./iu/static
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	mux.Get("/static/", http.StripPrefix("/static", fileServer))

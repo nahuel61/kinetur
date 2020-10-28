@@ -12,15 +12,15 @@ var (
 )
 
 type User struct {
-	ID        int
-	Tipo      string
-	Nombre    string
-	Apellido  string
-	DNI       int
-	Domicilio string
-	Email     string
-	Password  []byte
-	Created   time.Time
+	ID        int       `json:"id"`
+	Tipo      string    `json:"tipo"`
+	Nombre    string    `json:"nombre"`
+	Apellido  string    `json:"apellido"`
+	DNI       int       `json:"dni"`
+	Domicilio string    `json:"domicilio"`
+	Email     string    `json:"email"`
+	Password  []byte    `json:"password"`
+	Created   time.Time `json:"created"`
 }
 
 type Turno struct {

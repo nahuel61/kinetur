@@ -2,11 +2,10 @@ package mysql
 
 import (
 	"database/sql"
+	"github.com/go-sql-driver/mysql"
+	"golang.org/x/crypto/bcrypt"
 	"strings"
 	"tp-ISA-go.org/kinetur/pkg/models"
-
-	"github.com/go-sql-driver/mysql" // New import
-	"golang.org/x/crypto/bcrypt"     // New import
 )
 
 //tomo la conexion a db
@@ -47,15 +46,14 @@ func (m *UserModel) Authenticate(email, password string) (int, error) {
 	} else if err != nil {
 		return 0, err
 	}
-	// Check whether the hashed password and plain-text password provided match
-	// If they don't, we return the ErrInvalidCredentials error.
+	// Valida el hash del pass
 	err = bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
 	if err == bcrypt.ErrMismatchedHashAndPassword {
 		return 0, models.ErrInvalidCredentials
 	} else if err != nil {
 		return 0, err
 	}
-	// Otherwise, the password is correct. Return the user ID.
+	// Devuelve el user ID si esta bien autenticado.
 	return id, nil
 }
 

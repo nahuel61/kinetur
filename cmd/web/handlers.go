@@ -1,7 +1,11 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 	"tp-ISA-go.org/kinetur/pkg/forms"
 	"tp-ISA-go.org/kinetur/pkg/models"
 	_ "tp-ISA-go.org/kinetur/pkg/models"
@@ -29,7 +33,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	form.Required("tipo", "nombre", "apellido", "dni", "domicilio", "email", "password")
 	form.MatchesPattern("email", forms.EmailRX)
 	form.MinLength("dni", 8)
-	form.MinLength("password", 8)
+	form.MinLength("password", 6)
 	// si hay un error vuelvo a mostrar el formulario
 	if !form.Valid() {
 		app.render(w, r, "signup.page.tmpl", &templateData{Form: form})
@@ -91,9 +95,71 @@ func (app *application) turnoList(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "turn.page.tmpl", nil)
 }
 
+func ping(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("OK"))
+}
+
 //func onSignIn(googleUser) {
 //const googleJWT = googleUser.getAuthResponse().id_token
 //}
-func ping(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("OK"))
+
+func (app *application) userList(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var users []models.User
+	result, err := app.users.DB.Query("SELECT * FROM users ")
+	if err != nil {
+		app.serverError(w, err)
+	}
+	defer result.Close()
+	for result.Next() {
+		var user models.User
+		err := result.Scan(&user.ID, &user.Tipo, &user.Nombre, &user.Apellido, &user.DNI, &user.Domicilio, &user.Email, &user.Password, &user.Created)
+		if err != nil {
+			app.serverError(w, err)
+		}
+		users = append(users, user)
+	}
+	json.NewEncoder(w).Encode(users)
+}
+
+func (app *application) userCreate(w http.ResponseWriter, r *http.Request) {
+	stmt, err := app.users.DB.Prepare("INSERT INTO users (tipo,nombre, apellido, dni, domicilio, email, Password, created) VALUES(?,?,?,?,?,?,?, UTC_TIMESTAMP())")
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	keyVal := make(map[string]string)
+	json.Unmarshal(body, &keyVal)
+	tipo := keyVal["tipo"]
+	nombre := keyVal["nombre"]
+	apellido := keyVal["apellido"]
+	dni := keyVal["dni"]
+	domicilio := keyVal["domicilio"]
+	email := keyVal["email"]
+	password := keyVal["password"]
+
+	_, err = stmt.Exec(tipo, nombre, apellido, dni, domicilio, email, password)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	fmt.Fprintf(w, "Nuevo user creado")
+}
+
+func (app *application) userDelete(w http.ResponseWriter, r *http.Request) {
+	userId, err := strconv.Atoi(r.URL.Query().Get(":id"))
+
+	stmt, err := app.users.DB.Prepare("DELETE FROM users WHERE dni = ?")
+	if err != nil {
+		app.serverError(w, err)
+	}
+	_, err = stmt.Exec(userId)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	fmt.Fprintf(w, "Post with ID = %s was deleted", userId)
 }
