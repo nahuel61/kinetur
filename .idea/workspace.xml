@@ -19,9 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c69d8b68-df1b-4d17-a432-a40526bd3496" name="Default Changelist" comment="primera version de API, GET funciona correctamente, falta trabajar POST Y DELETE">
-      <change beforePath="$PROJECT_DIR$/cmd/web/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/web/main.go" afterDir="false" />
-    </list>
+    <list default="true" id="c69d8b68-df1b-4d17-a432-a40526bd3496" name="Default Changelist" comment="primera version de API, GET funciona correctamente, falta trabajar POST Y DELETE" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
