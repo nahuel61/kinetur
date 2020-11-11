@@ -22,7 +22,7 @@ func (app *application) routes() http.Handler {
 	mux.Post("/user/login", dynamicMiddleware.ThenFunc(app.loginUser))
 	mux.Get("/user/logout", dynamicMiddleware.ThenFunc(app.logoutUser))
 	mux.Get("/user/turno", dynamicMiddleware.ThenFunc(app.turnoList))
-
+	mux.Post("/user/turno", dynamicMiddleware.ThenFunc(app.turnoSave))
 	//routes de la API
 	mux.Get("/user", dynamicMiddleware.ThenFunc(app.userList))
 	mux.Post("/user", dynamicMiddleware.ThenFunc(app.userCreate))

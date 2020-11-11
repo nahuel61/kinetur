@@ -24,6 +24,6 @@ type User struct {
 }
 
 type Turno struct {
-	ID    int
-	Fecha time.Time
+	ID    int			`json:"id_fecha"`
+	Fecha time.Time		`json:"fecha"`
 }

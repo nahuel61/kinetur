@@ -5,55 +5,57 @@
 <!-- Include the CSRF token -->
 <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
     {{with .Form}}
-    <div>
-                <label>Tipo:</label>
+    <table>
+        <tr>
+            <td> <label>Tipo:</label></td>
                 {{with .Errors.Get "tipo"}}
-                    <label class='error'>{{.}}</label>
+                <td><label class='error'>{{.}}</label></td>
                 {{end}}
-                <input type='text' name='tipo' value='{{.Get "tipo"}}'>
-        </div>
-    <div>
-        <label>Nombre:</label>
-        {{with .Errors.Get "nombre"}}
-            <label class='error'>{{.}}</label>
-        {{end}}
-        <input type='text' name='nombre' value='{{.Get "nombre"}}'>
-    </div>
-    <div>
-            <label>Apellido:</label>
+            <td>  <input type='text' name='tipo' value='{{.Get "tipo"}}'></td>
+        </tr>
+        <tr>
+            <td><label>Nombre:</label></td>
+            {{with .Errors.Get "nombre"}}
+            <td><label class='error'>{{.}}</label></td>
+            {{end}}
+            <td><input type='text' name='nombre' value='{{.Get "nombre"}}'></td>
+        </tr>
+        <tr>
+            <td> <label>Apellido:</label></td>
             {{with .Errors.Get "apellido"}}
-                <label class='error'>{{.}}</label>
+            <td>     <label class='error'>{{.}}</label></td>
             {{end}}
-            <input type='text' name='apellido' value='{{.Get "apellido"}}'>
-    </div>
-    <div>
-            <label>DNI:</label>
+            <td>  <input type='text' name='apellido' value='{{.Get "apellido"}}'></td>
+        </tr>
+        <tr>
+            <td> <label>DNI:</label></td>
             {{with .Errors.Get "dni"}}
-                <label class='error'>{{.}}</label>
+            <td><label class='error'>{{.}}</label></td>
             {{end}}
-            <input type='text' name='dni' value='{{.Get "dni"}}'>
-    </div>
-    <div>
-                <label>Domicilio:</label>
-                {{with .Errors.Get "domicilio"}}
-                    <label class='error'>{{.}}</label>
-                {{end}}
-                <input type='text' name='domicilio' value='{{.Get "domicilio"}}'>
-        </div>
-    <div>
-        <label>Email:</label>
-        {{with .Errors.Get "email"}}
-        <label class='error'>{{.}}</label>
-        {{end}}
-        <input type='email' name='email' value='{{.Get "email"}}'>
-    </div>
-    <div>
-        <label>Password:</label>
-        {{with .Errors.Get "password"}}
-        <label class='error'>{{.}}</label>
-        {{end}}
-    <input type='password' name='password'>
-    </div>
+            <td>  <input type='text' name='dni' value='{{.Get "dni"}}'></td>
+        </tr>
+        <tr>
+            <td>  <label>Domicilio:</label></td>
+            {{with .Errors.Get "domicilio"}}
+            <td> <label class='error'>{{.}}</label></td>
+            {{end}}
+            <td> <input type='text' name='domicilio' value='{{.Get "domicilio"}}'></td>
+        </tr>
+        <tr>
+            <td>  <label>Email:</label></td>
+            {{with .Errors.Get "email"}}
+            <td> <label class='error'>{{.}}</label></td>
+            {{end}}
+            <td>  <input type='email' name='email' value='{{.Get "email"}}'></td>
+        </tr>
+        <tr>
+            <td>    <label>Password:</label></td>
+            {{with .Errors.Get "password"}}
+            <td>  <label class='error'>{{.}}</label></td>
+            {{end}}
+            <td>  <input type='password' name='password'></td>
+        </tr>
+    </table>
     <div>
         <input type='submit' value='Registrarse'>
     </div>

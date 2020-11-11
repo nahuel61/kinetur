@@ -32,7 +32,6 @@ func (m *UserModel) Insert(tipo, nombre, apellido, dni, domicilio, email, passwo
 	}
 	return err
 }
-
 // We'll use the Authenticate method to verify whether a user exists with
 // the provided email address and password. This will return the relevant
 // user ID if they do.
@@ -68,3 +67,4 @@ func (m *UserModel) Get(id int) (*models.User, error) {
 	}
 	return s, nil
 }
+

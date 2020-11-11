@@ -92,7 +92,24 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) turnoList(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "turn.page.tmpl", nil)
+	app.render(w, r, "turn.page.tmpl", &templateData{
+		Form: forms.New(nil),
+	})
+}
+
+func (app *application) turnoSave(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	form := forms.New(r.PostForm)
+	form.Required("fecha")
+	err = app.turnos.Insert(form.Get("slider_example_2"))
+
+	app.render(w, r, "turn.page.tmpl", &templateData{
+		Form: forms.New(nil),
+	})
 }
 
 func ping(w http.ResponseWriter, r *http.Request) {
@@ -106,7 +123,7 @@ func ping(w http.ResponseWriter, r *http.Request) {
 func (app *application) userList(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var users []models.User
-	result, err := app.users.DB.Query("SELECT * FROM users ")
+	result, err := app.users.DB.Query("SELECT * FROM kinetur.users ")
 	if err != nil {
 		app.serverError(w, err)
 	}
@@ -123,12 +140,11 @@ func (app *application) userList(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) userCreate(w http.ResponseWriter, r *http.Request) {
-	stmt, err := app.users.DB.Prepare("INSERT INTO users (tipo,nombre, apellido, dni, domicilio, email, Password, created) VALUES(?,?,?,?,?,?,?, UTC_TIMESTAMP())")
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		app.serverError(w, err)
 	}
-
-	body, err := ioutil.ReadAll(r.Body)
+	stmt, err := app.users.DB.Prepare("INSERT INTO kinetur.users (tipo,nombre, apellido, dni, domicilio, email, Password, created) VALUES(?,?,?,?,?,?,?, UTC_TIMESTAMP())")
 	if err != nil {
 		app.serverError(w, err)
 	}
@@ -150,10 +166,12 @@ func (app *application) userCreate(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Nuevo user creado")
 }
 
+
+
 func (app *application) userDelete(w http.ResponseWriter, r *http.Request) {
 	userId, err := strconv.Atoi(r.URL.Query().Get(":id"))
 
-	stmt, err := app.users.DB.Prepare("DELETE FROM users WHERE dni = ?")
+	stmt, err := app.users.DB.Prepare("DELETE FROM kinetur.users WHERE id = ?")
 	if err != nil {
 		app.serverError(w, err)
 	}

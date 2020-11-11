@@ -1,0 +1,23 @@
+create database kinetur;
+use kinetur;
+
+CREATE TABLE users (
+id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+tipo VARCHAR(255) NOT NULL,
+nombre VARCHAR(255) NOT NULL,
+apellido VARCHAR(255) NOT NULL,
+dni INTEGER NOT NULL,
+FechaNacimiento DATE,
+domicilio VARCHAR(255) NOT NULL,
+email VARCHAR(255) NOT NULL,
+password CHAR(60) NOT NULL,
+created DATETIME NOT NULL
+);
+ALTER TABLE users ADD CONSTRAINT users_uc_email UNIQUE (email);
+
+create table turno (
+id INTEGER NOT NULL auto_increment,
+hora TIME NOT NULL,
+fecha DATE NOT NULL
+);
+ALTER TABLE turno alter id integer not null auto_increment;

@@ -8,17 +8,28 @@
         {{with .Errors.Get "generic"}}
             <div class='error'>{{.}}</div>
         {{end}}
-        <div>
-            <label>Email:</label>
-            <input type='email' name='email' value='{{.Get "email"}}'>
-        </div>
-        <div>
-            <label>Password:</label>
-            <input type='password' name='password'>
-        </div>
+        <table>
+            <tr>
+                <td><label>Email:</label></td>
+                <td><input type='email' name='email' value='{{.Get "email"}}'></td>
+            </tr>
+            <tr>
+                <td><label>Password:</label></td>
+                <td><input type='password' name='password'></td>
+            </tr>
+        </table>
         <div>
             <input type='submit' value='Iniciar Sesion'>
         </div>
+        <p> o accede con Google:</p> <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
     {{end}}
 </form>
+
+<script>
+function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+}
+</script>
 {{end}}

@@ -13,6 +13,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" integrity="sha512-LT9fy1J8pE4Cy6ijbg96UkExgOjCqcxAC7xsnv+mLJxSvftGVmmc236jlPTZXPcBRQcVOWoK1IJhb1dAjtb4lQ==" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/i18n/jquery-ui-timepicker-addon-i18n.min.js" integrity="sha512-t2ZIJH81Sh+SWSb4BuA9en4j6fwja+sYOEXbqoepD9lJ+efUGD94gSWqdmgQchGmPez2ojECq4Fm6bKMUAzIiQ==" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js" integrity="sha512-s5u/JBtkPg+Ff2WEr49/cJsod95UgLHbC00N/GglqdQuLnYhALncz8ZHiW/LxDRGduijLKzeYb7Aal9h3codZA==" crossorigin="anonymous"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <meta name="google-signin-client_id" content="979995675320-ssm48s9m7at53t7ta9pm4rg4kkkbtfs8.apps.googleusercontent.com">
     </head>
     <body>
     <div class="container">
@@ -29,6 +31,8 @@
                     {{if .AuthenticatedUser}}
                         <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
                         <a class="nav-link" href="/user/logout">Cerrar Sesion ({{.AuthenticatedUser.Nombre}})</a>
+
+                        <a href="/user/logout" onclick="signOut();">Sign out</a>
                     {{else}}
                         <a class="nav-link" href="/user/signup">Registrarse</a>
                         <a class="nav-link" href="/user/login">Iniciar Sesion</a>
@@ -67,6 +71,13 @@
                 hourMax: 19
             	});
             });
+
+      function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log('User signed out.');
+        });
+      }
     </script>
     </html>
 {{end}}
