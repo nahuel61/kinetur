@@ -96,7 +96,7 @@ func main() {
 	//defino la direccion default
 	//dsn := flag.String("dsn", "root:admin@/kinetur?parseTime=true", "Mysql data")
 	dsn := flag.String("dsn", "b253768b7ff10a:83de44c1@tcp(us-cdbr-east-02.cleardb.com)/heroku_ad923fd42e29092", "Mysql data")
-	addr := flag.String("addr", ":", "HTTP network address")
+	addr := flag.String("addr", ":4000", "HTTP network address")
 	//agrego autenticacion
 	secret := flag.String("secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret key")
 
