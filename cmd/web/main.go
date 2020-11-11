@@ -94,7 +94,7 @@ func saveToken(path string, token *oauth2.Token) {
 func main() {
 
 	//defino la direccion default
-	dsn := flag.String("dsn", "b253768b7ff10a:83de44c1@/heroku_ad923fd42e29092?parseTime=true", "Mysql data")
+	dsn := flag.String("dsn", "root:admin@/kinetur?parseTime=true", "Mysql data")
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	//agrego autenticacion
 	secret := flag.String("secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret key")
