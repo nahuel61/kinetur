@@ -14,7 +14,7 @@ func (app *application) routes() http.Handler {
 	//pat sigue el orden
 	//es mas complicado al principio pero cuando crezca al applicacion es mas facil manejar asi los logs de errores
 	mux := pat.New()
-	//mux.Get("/", dynamicMiddleware.ThenFunc(app.home))
+	mux.Get("/", dynamicMiddleware.ThenFunc(app.home))
 
 	mux.Get("/user/signup", dynamicMiddleware.ThenFunc(app.signupUserForm))
 	mux.Post("/user/signup", dynamicMiddleware.ThenFunc(app.signupUser))
