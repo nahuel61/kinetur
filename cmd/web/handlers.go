@@ -11,8 +11,11 @@ import (
 	_ "tp-ISA-go.org/kinetur/pkg/models"
 )
 
-func (app *application) home(w http.ResponseWriter, r *http.Request) {
+func ping(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("OK"))
+}
 
+func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "home.page.tmpl", nil)
 }
 
@@ -30,7 +33,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	}
 	//validacion de los datos de usuario
 	form := forms.New(r.PostForm)
-	form.Required("tipo", "nombre", "apellido", "dni", "domicilio", "email", "password")
+	form.Required("dni", "nombres", "apellidos", "direccion", "email", "password")
 	form.MatchesPattern("email", forms.EmailRX)
 	form.MinLength("dni", 8)
 	form.MinLength("password", 6)
@@ -40,7 +43,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// creo un nuevo registro en la base de datos, si se repite el email avisa
-	err = app.users.Insert(form.Get("tipo"), form.Get("nombre"), form.Get("apellido"), form.Get("dni"), form.Get("domicilio"), form.Get("email"), form.Get("password"))
+	err = app.pacientes.Insert(form.Get("dni"), form.Get("nombres"), form.Get("apellidos"), form.Get("direccion"), form.Get("email"), form.Get("password"))
 	if err == models.ErrDuplicateEmail {
 		form.Errors.Add("email", "Direccion ya registrada")
 		app.render(w, r, "signup.page.tmpl", &templateData{Form: form})
@@ -51,7 +54,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	}
 	// aviso que el registro fue exitoso y mando a iniciar sesion
 	app.session.Put(r, "flash", "Registro exitoso, inicie sesion.")
-	// Registro y redirecciono a pa pagina de login
+	// Registro y redirecciono a la pagina de login
 	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 }
 
@@ -69,7 +72,7 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	}
 	// Verifico que las credenciales sean correctas, si no es asi aviso
 	form := forms.New(r.PostForm)
-	id, err := app.users.Authenticate(form.Get("email"), form.Get("password"))
+	id, err := app.pacientes.Authenticate(form.Get("email"), form.Get("password"))
 	if err == models.ErrInvalidCredentials {
 		form.Errors.Add("generic", "Email o Password incorrectos")
 		app.render(w, r, "login.page.tmpl", &templateData{Form: form})
@@ -83,6 +86,7 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	// Redireccion a ver turnos.
 	http.Redirect(w, r, "/user/turno", http.StatusSeeOther)
 }
+
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 	// Elimino el id de sesion para poder cerrarla
 	app.session.Remove(r, "userID")
@@ -97,40 +101,17 @@ func (app *application) turnoList(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (app *application) turnoSave(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	form := forms.New(r.PostForm)
-	form.Required("fecha")
-	err = app.turnos.Insert(form.Get("slider_example_2"))
-
-	app.render(w, r, "turn.page.tmpl", &templateData{
-		Form: forms.New(nil),
-	})
-}
-
-func ping(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("OK"))
-}
-
-//func onSignIn(googleUser) {
-//const googleJWT = googleUser.getAuthResponse().id_token
-//}
-
 func (app *application) userList(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var users []models.User
-	result, err := app.users.DB.Query("SELECT * FROM kinetur.users ")
+	var users []models.Pacientes
+	result, err := app.pacientes.DB.Query("SELECT * FROM kinetur.Pacientes ")
 	if err != nil {
 		app.serverError(w, err)
 	}
 	defer result.Close()
 	for result.Next() {
-		var user models.User
-		err := result.Scan(&user.ID, &user.Tipo, &user.Nombre, &user.Apellido, &user.DNI, &user.Domicilio, &user.Email, &user.Password, &user.Created)
+		var user models.Pacientes
+		err := result.Scan(&user.DNI, &user.Nombres, &user.Apellidos, &user.Direccion, &user.Email, &user.Password)
 		if err != nil {
 			app.serverError(w, err)
 		}
@@ -144,34 +125,31 @@ func (app *application) userCreate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.serverError(w, err)
 	}
-	stmt, err := app.users.DB.Prepare("INSERT INTO kinetur.users (tipo,nombre, apellido, dni, domicilio, email, Password, created) VALUES(?,?,?,?,?,?,?, UTC_TIMESTAMP())")
+	stmt, err := app.pacientes.DB.Prepare("INSERT INTO kinetur.Pacientes (dni,nombres, apellidos,direccion, email, Password) VALUES(?,?,?,?,?,?)")
 	if err != nil {
 		app.serverError(w, err)
 	}
 
 	keyVal := make(map[string]string)
 	json.Unmarshal(body, &keyVal)
-	tipo := keyVal["tipo"]
-	nombre := keyVal["nombre"]
-	apellido := keyVal["apellido"]
-	dni := keyVal["dni"]
-	domicilio := keyVal["domicilio"]
+	DNI := keyVal["dni"]
+	nombres := keyVal["nombres"]
+	apellidos := keyVal["apellidos"]
+	direccion := keyVal["direccion"]
 	email := keyVal["email"]
 	password := keyVal["password"]
 
-	_, err = stmt.Exec(tipo, nombre, apellido, dni, domicilio, email, password)
+	_, err = stmt.Exec(DNI, nombres, apellidos, direccion, email, password)
 	if err != nil {
 		app.serverError(w, err)
 	}
-	fmt.Fprintf(w, "Nuevo user creado")
+	fmt.Fprintf(w, "Nuevo paciente creado")
 }
 
-
-
 func (app *application) userDelete(w http.ResponseWriter, r *http.Request) {
-	userId, err := strconv.Atoi(r.URL.Query().Get(":id"))
+	userId, err := strconv.Atoi(r.URL.Query().Get(":dni"))
 
-	stmt, err := app.users.DB.Prepare("DELETE FROM kinetur.users WHERE id = ?")
+	stmt, err := app.pacientes.DB.Prepare("DELETE FROM kinetur.Pacientes WHERE DNI = ?")
 	if err != nil {
 		app.serverError(w, err)
 	}
@@ -179,5 +157,30 @@ func (app *application) userDelete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.serverError(w, err)
 	}
-	fmt.Fprintf(w, "Post with ID = %s was deleted", userId)
+	fmt.Fprintf(w, "Paciente con DNI = %c fue eliminado", userId)
 }
+
+//--------------------------FUNCIONES DE LOS PROFESIONALES-------------------//
+
+func (app *application) profesionalesLista(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var profesionales []models.Profesional
+	result, err := app.profesional.DB.Query("SELECT * FROM kinetur.Profesional ")
+	if err != nil {
+		app.serverError(w, err)
+	}
+	defer result.Close()
+	for result.Next() {
+		var prof models.Profesional
+		err := result.Scan(&prof.Id, &prof.DNI, &prof.Nombres, &prof.Apellidos, &prof.Especialidad)
+		if err != nil {
+			app.serverError(w, err)
+		}
+		profesionales = append(profesionales, prof)
+	}
+	json.NewEncoder(w).Encode(profesionales)
+}
+
+//func onSignIn(googleUser) {
+//const googleJWT = googleUser.getAuthResponse().id_token
+//}

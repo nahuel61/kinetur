@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"database/sql"
-	"tp-ISA-go.org/kinetur/pkg/models"
 )
 
 //tomo la conexion a db
@@ -10,7 +9,7 @@ type TurnoModel struct {
 	DB *sql.DB
 }
 
-// inserto turno en la db
+/* inserto turno en la db
 func (m *TurnoModel) Insert(fecha string) error {
 
 	stmt := "INSERT INTO turno (fecha) VALUES(?)"
@@ -33,3 +32,4 @@ func (m *TurnoModel) Get(id int) (*models.Turno, error) {
 	return s, nil
 }
 
+*/

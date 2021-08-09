@@ -1,3 +1,5 @@
+//Funciones de validacion de formularios
+
 package forms
 
 import (
@@ -8,18 +10,16 @@ import (
 	"unicode/utf8"
 )
 
-// Create a custom Form struct, which anonymously embeds a url.Values object
-// (to hold the form data) and an Errors field to hold any validation errors
-// for the form data.
+// EmailRX expresion regular para el campo de email
 var EmailRX = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9]")
 
+//creo una estructura de formulario para guardar valores y errores
 type Form struct {
 	url.Values
 	Errors errors
 }
 
-// Define a New function to initialize a custom Form struct. Notice that
-// this takes the form data as the parameter?
+// Inicializo un nuevo formulario
 func New(data url.Values) *Form {
 	return &Form{
 		data,
@@ -27,34 +27,28 @@ func New(data url.Values) *Form {
 	}
 }
 
-// Implement a Required method to check that specific fields in the form
-// data are present and not blank. If any fields fail this check, add the
-// appropriate message to the form errors.
+// Required Obliga a completar los valores que sean marcados como Required
 func (f *Form) Required(fields ...string) {
 	for _, field := range fields {
 		value := f.Get(field)
 		if strings.TrimSpace(value) == "" {
-			f.Errors.Add(field, "This field cannot be blank")
+			f.Errors.Add(field, "El campo no puede estar en blanco")
 		}
 	}
 }
 
-// Implement a MaxLength method to check that a specific field in the form
-// contains a maximum number of characters. If the check fails then add the
-// appropriate message to the form errors.
+// MaxLength Funcion para comprobar el largo maximo del campo del formulario
 func (f *Form) MaxLength(field string, d int) {
 	value := f.Get(field)
 	if value == "" {
 		return
 	}
 	if utf8.RuneCountInString(value) > d {
-		f.Errors.Add(field, fmt.Sprintf("This field is too long (maximum is %d,)", d))
+		f.Errors.Add(field, fmt.Sprintf("El valor ingresado es muy largo (el maximo es %d,)", d))
 	}
 }
 
-// Implement a PermittedValues method to check that a specific field in the form
-// matches one of a set of specific permitted values. If the check fails
-// then add the appropriate message to the form errors.
+// PermittedValues comprueba que el texto ingresado coincida con valores especificos que estan permitidos
 func (f *Form) PermittedValues(field string, opts ...string) {
 	value := f.Get(field)
 	if value == "" {
@@ -65,30 +59,26 @@ func (f *Form) PermittedValues(field string, opts ...string) {
 			return
 		}
 	}
-	f.Errors.Add(field, "This field is invalid")
+	f.Errors.Add(field, "El valor ingresado es invalido")
 }
 
-// Implement a Valid method which returns true if there are no errors.
+// Valid Validacion que devuelve true si no hay errores
 func (f *Form) Valid() bool {
 	return len(f.Errors) == 0
 }
 
-// Implement a MinLength method to check that a specific field in the form
-// contains a minimum number of characters. If the check fails then add the
-// appropriate message to the form errors.
+// MinLength Verifica el valor minimo de caracteres del campo
 func (f *Form) MinLength(field string, d int) {
 	value := f.Get(field)
 	if value == "" {
 		return
 	}
 	if utf8.RuneCountInString(value) < d {
-		f.Errors.Add(field, fmt.Sprintf("This field is too short (minimum is %d)", d))
+		f.Errors.Add(field, fmt.Sprintf("El valor ingresado es muy corto (el minimo es %d)", d))
 	}
 }
 
-// Implement a MatchesPattern method to check that a specific field in the form
-// matches a regular expression. If the check fails then add the
-// appropriate message to the form errors.
+// MatchesPattern comprueba que el texto ingresado coincida con valores especificos de expresiones regulares
 func (f *Form) MatchesPattern(field string, pattern *regexp.Regexp) {
 	value := f.Get(field)
 	if value == "" {

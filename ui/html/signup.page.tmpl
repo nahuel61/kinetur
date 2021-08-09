@@ -6,40 +6,34 @@
 <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
     {{with .Form}}
     <table>
-        <tr>
-            <td> <label>Tipo:</label></td>
-                {{with .Errors.Get "tipo"}}
-                <td><label class='error'>{{.}}</label></td>
-                {{end}}
-            <td>  <input type='text' name='tipo' value='{{.Get "tipo"}}'></td>
-        </tr>
-        <tr>
-            <td><label>Nombre:</label></td>
-            {{with .Errors.Get "nombre"}}
+       <tr>
+            <td> <label>DNI:</label></td>
+            {{with .Errors.Get "DNI"}}
             <td><label class='error'>{{.}}</label></td>
             {{end}}
-            <td><input type='text' name='nombre' value='{{.Get "nombre"}}'></td>
+            <td>  <input type='text' name='dni' value='{{.Get "DNI"}}'></td>
+            </tr>
+        <tr>
+            <td><label>Nombres:</label></td>
+            {{with .Errors.Get "nombres"}}
+            <td><label class='error'>{{.}}</label></td>
+            {{end}}
+            <td><input type='text' name='nombres' value='{{.Get "nombres"}}'></td>
         </tr>
         <tr>
-            <td> <label>Apellido:</label></td>
-            {{with .Errors.Get "apellido"}}
+            <td> <label>Apellidos:</label></td>
+            {{with .Errors.Get "apellidos"}}
             <td>     <label class='error'>{{.}}</label></td>
             {{end}}
-            <td>  <input type='text' name='apellido' value='{{.Get "apellido"}}'></td>
+            <td>  <input type='text' name='apellidos' value='{{.Get "apellidos"}}'></td>
         </tr>
+
         <tr>
-            <td> <label>DNI:</label></td>
-            {{with .Errors.Get "dni"}}
-            <td><label class='error'>{{.}}</label></td>
-            {{end}}
-            <td>  <input type='text' name='dni' value='{{.Get "dni"}}'></td>
-        </tr>
-        <tr>
-            <td>  <label>Domicilio:</label></td>
-            {{with .Errors.Get "domicilio"}}
+            <td>  <label>Direccion:</label></td>
+            {{with .Errors.Get "direccion"}}
             <td> <label class='error'>{{.}}</label></td>
             {{end}}
-            <td> <input type='text' name='domicilio' value='{{.Get "domicilio"}}'></td>
+            <td> <input type='text' name='direccion' value='{{.Get "direccion"}}'></td>
         </tr>
         <tr>
             <td>  <label>Email:</label></td>

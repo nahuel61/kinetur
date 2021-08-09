@@ -4,21 +4,16 @@ import (
 	"crypto/tls"
 	"database/sql"
 	"flag"
-	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golangcollege/sessions"
+	_ "golang.org/x/oauth2/google"
+	_ "google.golang.org/api/calendar/v3"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"time"
 	"tp-ISA-go.org/kinetur/pkg/models/mysql"
-
-	"encoding/json"
-	"golang.org/x/net/context"
-	"golang.org/x/oauth2"
-	_ "golang.org/x/oauth2/google"
-	_ "google.golang.org/api/calendar/v3"
 )
 
 type contextKey string
@@ -28,12 +23,14 @@ var contextKeyUser = contextKey("usuario")
 type application struct {
 	errorLog      *log.Logger
 	infoLog       *log.Logger
-	users         *mysql.UserModel //con esto permito que este disponible para el handler
+	pacientes     *mysql.PacientesModel //con esto permito que este disponible para el handler
+	profesional   *mysql.ProfesionalesModel
 	templateCache map[string]*template.Template
 	session       *sessions.Session //agrego sesion a la struc
-	turnos 			*mysql.TurnoModel
+	turnos        *mysql.TurnoModel
 }
 
+/*
 // Retrieve a token, saves the token, then returns the generated client.
 func getClient(config *oauth2.Config) *http.Client {
 	// The file token.json stores the user's access and refresh tokens, and is
@@ -72,7 +69,12 @@ func tokenFromFile(file string) (*oauth2.Token, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
+	defer func(f *os.File) {
+		err := f.Close()
+		if err != nil {
+
+		}
+	}(f)
 	tok := &oauth2.Token{}
 	err = json.NewDecoder(f).Decode(tok)
 	return tok, err
@@ -89,14 +91,14 @@ func saveToken(path string, token *oauth2.Token) {
 	json.NewEncoder(f).Encode(token)
 }
 
-
+*/
 
 func main() {
 
 	//defino la direccion default
-	//dsn := flag.String("dsn", "root:admin@/kinetur?parseTime=true", "Mysql data")
-	dsn := flag.String("dsn", "b253768b7ff10a:83de44c1@tcp(us-cdbr-east-02.cleardb.com)/heroku_ad923fd42e29092", "Mysql data")
+	dsn := flag.String("dsn", "root:admin@/kinetur?parseTime=true", "Mysql data")
 	addr := flag.String("addr", ":4000", "HTTP network address")
+
 	//agrego autenticacion
 	secret := flag.String("secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret key")
 
@@ -111,25 +113,30 @@ func main() {
 	if err != nil {
 		errorLog.Fatal(err)
 	}
-	defer db.Close()
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+			return
+		}
+	}(db)
 
 	// inicializo el cache de templates
 	templateCache, err := newTemplateCache("./ui/html/")
 	if err != nil {
 		errorLog.Fatal(err)
 	}
-	//creo un nuevo session manager y le paso la clave secret como parametro. la sesion expira a las 12 horas
+	//creo un nuevo session manager y le paso la clave secret como parametro. la sesion expira a las 6 horas
 	session := sessions.New([]byte(*secret))
-	session.Lifetime = 12 * time.Hour
+	session.Lifetime = 6 * time.Hour
 	session.Secure = true
 
 	app := &application{
 		errorLog:      errorLog,
 		infoLog:       infoLog,
-		users:         &mysql.UserModel{DB: db},
+		pacientes:     &mysql.PacientesModel{DB: db},
 		templateCache: templateCache,
 		session:       session,
-		turnos:			&mysql.TurnoModel{DB: db},
+		turnos:        &mysql.TurnoModel{DB: db},
 	}
 
 	// Initialize a tls.Config struct to hold the non-default TLS settings we want the server to use.
@@ -167,4 +174,3 @@ func openDB(dsn string) (*sql.DB, error) {
 	}
 	return db, nil
 }
-

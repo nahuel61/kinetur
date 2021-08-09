@@ -44,37 +44,31 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 	return td
 }
 
+//funcion que renderiza los templates html
 func (app *application) render(w http.ResponseWriter, r *http.Request, name string, td *templateData) {
-	// Retrieve the appropriate template set from the cache based on the page n
-	// (like 'home.page.tmpl'). If no entry exists in the cache with the
-	// provided name, call the serverError helper method that we made earlier.
 	ts, ok := app.templateCache[name]
 	if !ok {
-		app.serverError(w, fmt.Errorf("The template %s does not exist", name))
+		app.serverError(w, fmt.Errorf("El template %s NO existe", name))
 		return
 	}
 
+	// Escribo el template en un buffer que me permite
+	//mostrar si hay un error antes de llamar al http.ResponseWriter.
 	buf := new(bytes.Buffer) //creo un nuevo buffer
-
-	// Write the template to the buffer, instead of straight to the
-	// http.ResponseWriter. If there's an error, call our serverError helper and
-	// return.
 	err := ts.Execute(buf, app.addDefaultData(td, r))
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 
-	// Write the contents of the buffer to the http.ResponseWriter. Again, this
-	// is another time where we pass our http.ResponseWriter to a function that
-	// takes an io.Writer.
+	// paso lo del buffer al http.ResponseWriter. Ag
 	buf.WriteTo(w)
 
 }
 
 // si el usuario esta autenticado va a responder con la contextkeyuser
-func (app *application) authenticatedUser(r *http.Request) *models.User {
-	user, ok := r.Context().Value(contextKeyUser).(*models.User)
+func (app *application) authenticatedUser(r *http.Request) *models.Pacientes {
+	user, ok := r.Context().Value(contextKeyUser).(*models.Pacientes)
 	if !ok {
 		return nil
 	}

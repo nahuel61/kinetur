@@ -14,7 +14,6 @@ func secureHeaders(next http.Handler) http.Handler {
 		//Este codigo se ejecuta antes de llegar al Application Handler!!!
 		w.Header().Set("X-XSS-Protection", "1; mode=block")
 		w.Header().Set("X-Frame-Options", "deny")
-
 		next.ServeHTTP(w, r)
 		//El codigo aca se ejecuta despues de pasar por el Application handler
 	})
@@ -27,17 +26,16 @@ func (app *application) logRequest(next http.Handler) http.Handler {
 	})
 }
 func (app *application) requireAuthenticatedUser(next http.Handler) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// If the user is not authenticated, redirect them to the login page and
-		// return from the middleware chain so that no subsequent handlers in
-		// the chain are executed.
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Si el usuario no esta autenticado se lo redirecciona al login
+		// desde el middleware, sin llegar a ejecutar el handler
 		if app.authenticatedUser(r) == nil {
 			http.Redirect(w, r, "/user/login", 302)
 			return
 		}
-		// Otherwise call the next handler in the chain.
+		// si esta logueado pasa al handler
 		next.ServeHTTP(w, r)
-	})
+	}
 }
 
 //no-surf previene CSRF (cross-site request forgery)
@@ -63,7 +61,7 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 		// Fetch the details of the current user from the database. If
 		// no matching record is found, remove the (invalid) userID from
 		// their session and call the next handler in the chain as normal.
-		user, err := app.users.Get(app.session.GetInt(r, "userID"))
+		user, err := app.pacientes.Get(app.session.GetInt(r, "userID"))
 		if err == models.ErrNoRecord {
 			app.session.Remove(r, "userID")
 			next.ServeHTTP(w, r)

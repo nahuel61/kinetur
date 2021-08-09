@@ -9,20 +9,20 @@ import (
 )
 
 //tomo la conexion a db
-type UserModel struct {
+type PacientesModel struct {
 	DB *sql.DB
 }
 
-// inserto nuevo usuario en la db
-func (m *UserModel) Insert(tipo, nombre, apellido, dni, domicilio, email, password string) error {
+// inserto nuevo paciente en la db
+func (m *PacientesModel) Insert(dni, nombres, apellidos, direccion, email, password string) error {
 	// Create a bcrypt hash of the plain-text password. nahuel1234
-	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), 8)
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), 6)
 	if err != nil {
 		return err
 	}
-	stmt := "INSERT INTO users (tipo,nombre, apellido, dni, domicilio, email, Password, created) VALUES(?,?,?,?,?,?,?, UTC_TIMESTAMP())"
+	stmt := "INSERT INTO Pacientes (dni,nombres, apellidos,direccion, email, Password) VALUES(?,?,?,?,?,?)"
 
-	_, err = m.DB.Exec(stmt, tipo, nombre, apellido, dni, domicilio, email, string(hashPassword))
+	_, err = m.DB.Exec(stmt, dni, nombres, apellidos, direccion, email, string(hashPassword))
 	if err != nil {
 		if mysqlErr, ok := err.(*mysql.MySQLError); ok {
 			if mysqlErr.Number == 1062 && strings.Contains(mysqlErr.Message, "users_uc_email") {
@@ -32,13 +32,14 @@ func (m *UserModel) Insert(tipo, nombre, apellido, dni, domicilio, email, passwo
 	}
 	return err
 }
-// We'll use the Authenticate method to verify whether a user exists with
-// the provided email address and password. This will return the relevant
-// user ID if they do.
-func (m *UserModel) Authenticate(email, password string) (int, error) {
+
+// Usaremos el método Authenticate para verificar si un paciente existe con
+// la dirección de correo electrónico y la contraseña proporcionadas.
+//Esto devolverá el ID (DNI) de usuario si lo hacen.
+func (m *PacientesModel) Authenticate(email, password string) (int, error) {
 	var id int
 	var hashedPassword []byte
-	row := m.DB.QueryRow("select id, password from users where email = email")
+	row := m.DB.QueryRow("select dni, password from Pacientes where email = email")
 	err := row.Scan(&id, &hashedPassword)
 	if err == sql.ErrNoRows {
 		return 0, models.ErrInvalidCredentials
@@ -56,10 +57,11 @@ func (m *UserModel) Authenticate(email, password string) (int, error) {
 	return id, nil
 }
 
-func (m *UserModel) Get(id int) (*models.User, error) {
-	s := &models.User{}
-	stmt := `SELECT id, nombre, email, created FROM users WHERE id = ?`
-	err := m.DB.QueryRow(stmt, id).Scan(&s.ID, &s.Nombre, &s.Email, &s.Created)
+//esta funcion la usa el middleware
+func (m *PacientesModel) Get(id int) (*models.Pacientes, error) {
+	s := &models.Pacientes{}
+	stmt := `SELECT dni, nombres, email, created FROM Pacientes WHERE dni = ?`
+	err := m.DB.QueryRow(stmt, id).Scan(&s.DNI, &s.Nombres, &s.Email)
 	if err == sql.ErrNoRows {
 		return nil, models.ErrNoRecord
 	} else if err != nil {
@@ -67,4 +69,3 @@ func (m *UserModel) Get(id int) (*models.User, error) {
 	}
 	return s, nil
 }
-

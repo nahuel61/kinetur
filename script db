@@ -1,23 +1,51 @@
+DROP database if exists kinetur;
 create database kinetur;
 use kinetur;
 
-CREATE TABLE users (
-id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-tipo VARCHAR(255) NOT NULL,
-nombre VARCHAR(255) NOT NULL,
-apellido VARCHAR(255) NOT NULL,
-dni INTEGER NOT NULL,
-FechaNacimiento DATE,
-domicilio VARCHAR(255) NOT NULL,
-email VARCHAR(255) NOT NULL,
-password CHAR(60) NOT NULL,
-created DATETIME NOT NULL
+CREATE TABLE Pacientes (
+                       DNI char (8) NOT NULL PRIMARY KEY,
+                       nombres VARCHAR(30) NOT NULL,
+                       apellidos VARCHAR(30) NOT NULL,
+                       direccion VARCHAR(60) NOT NULL,
+                       email VARCHAR(255) NOT NULL,
+                       password CHAR(60) NOT NULL
 );
-ALTER TABLE users ADD CONSTRAINT users_uc_email UNIQUE (email);
+ALTER TABLE Pacientes ADD CONSTRAINT users_uc_email UNIQUE (email);
 
-create table turno (
-id INTEGER NOT NULL auto_increment,
-hora TIME NOT NULL,
-fecha DATE NOT NULL
+create table Especialidades (
+                        id int NOT NULL PRIMARY KEY auto_increment,
+                        nombre VARCHAR(40) NOT NULL
 );
-ALTER TABLE turno alter id integer not null auto_increment;
+
+create table Profesional (
+                       id int NOT NULL PRIMARY KEY auto_increment,
+                       DNI char (8) NOT NULL,
+                       nombres VARCHAR(30) NOT NULL,
+                       apellidos VARCHAR(30) NOT NULL,
+                       especialidad_id int,
+                       FOREIGN KEY (especialidad_id) references Especialidades(id)
+);
+create table Horarios (
+                       id int NOT NULL PRIMARY KEY auto_increment,
+                       hora_inicio TIME NOT NULL,
+                       hora_fin time not NULL,
+                       cupos INTEGER NOT NULL CHECK ( cupos >=1 )
+);
+create table Dias (
+                       dia char (1) NOT NULL,
+                       profesional_id int ,
+                       FOREIGN KEY (profesional_id) references Profesional(id),
+                       horario_id int ,
+                       FOREIGN KEY (horario_id) references Horarios(id),
+                       PRIMARY KEY (dia, profesional_id)
+);
+create table Citas (
+                       id int NOT NULL primary key auto_increment,
+
+                       paciente_DNI char(8)NOT NULL,
+                       FOREIGN KEY (paciente_DNI) REFERENCES Pacientes(DNI),
+                       profesional_id int not null,
+                       FOREIGN KEY (profesional_id) REFERENCES Profesional(id),
+
+                       fecha DATEtime NOT NULL
+);
