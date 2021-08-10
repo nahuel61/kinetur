@@ -3,7 +3,7 @@ create database kinetur;
 use kinetur;
 
 CREATE TABLE Pacientes (
-                       DNI char (8) NOT NULL PRIMARY KEY,
+                       DNI int NOT NULL PRIMARY KEY,
                        nombres VARCHAR(30) NOT NULL,
                        apellidos VARCHAR(30) NOT NULL,
                        direccion VARCHAR(60) NOT NULL,
@@ -19,7 +19,7 @@ create table Especialidades (
 
 create table Profesional (
                        id int NOT NULL PRIMARY KEY auto_increment,
-                       DNI char (8) NOT NULL,
+                       DNI int NOT NULL,
                        nombres VARCHAR(30) NOT NULL,
                        apellidos VARCHAR(30) NOT NULL,
                        especialidad_id int,
@@ -41,11 +41,9 @@ create table Dias (
 );
 create table Citas (
                        id int NOT NULL primary key auto_increment,
-
-                       paciente_DNI char(8)NOT NULL,
+                       paciente_DNI int NOT NULL,
                        FOREIGN KEY (paciente_DNI) REFERENCES Pacientes(DNI),
                        profesional_id int not null,
                        FOREIGN KEY (profesional_id) REFERENCES Profesional(id),
-
                        fecha DATEtime NOT NULL
 );

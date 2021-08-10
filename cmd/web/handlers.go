@@ -164,14 +164,14 @@ func (app *application) userDelete(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) profesionalesLista(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var profesionales []models.Profesional
+	var profesionales []models.Profesionales
 	result, err := app.profesional.DB.Query("SELECT * FROM kinetur.Profesional ")
 	if err != nil {
 		app.serverError(w, err)
 	}
 	defer result.Close()
 	for result.Next() {
-		var prof models.Profesional
+		var prof models.Profesionales
 		err := result.Scan(&prof.Id, &prof.DNI, &prof.Nombres, &prof.Apellidos, &prof.Especialidad)
 		if err != nil {
 			app.serverError(w, err)
@@ -181,6 +181,49 @@ func (app *application) profesionalesLista(w http.ResponseWriter, r *http.Reques
 	json.NewEncoder(w).Encode(profesionales)
 }
 
+func (app *application) addProfesional(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	stmt, err := app.pacientes.DB.Prepare("INSERT INTO kinetur.Profesional (DNI,nombres, apellidos, especialidad_id) VALUES(?,?,?,?)")
+	if err != nil {
+		app.serverError(w, err)
+	}
+	keyVal := make(map[string]string)
+	json.Unmarshal(body, &keyVal)
+	DNI := keyVal["dni"]
+	nombres := keyVal["nombres"]
+	apellidos := keyVal["apellidos"]
+	especialidadId := keyVal["especialidad"]
+
+	_, err = stmt.Exec(DNI, nombres, apellidos, especialidadId)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	fmt.Fprintf(w, "Nuevo profesional agregado")
+
+}
+
 //func onSignIn(googleUser) {
 //const googleJWT = googleUser.getAuthResponse().id_token
 //}
+/*func (m *ProfesionalesModel) Insert(DNI int, nombres string, apellidos string, especialidad int) (int,error) {
+	// Create a bcrypt hash of the plain-text password. nahuel1234
+
+	stmt := "INSERT INTO kinetur.Profesional (DNI,nombres, apellidos, especialidad_id) VALUES(?,?,?,?)"
+
+	result, err := m.DB.Exec(stmt, DNI, nombres, apellidos, especialidad )
+	if err != nil {
+		return 0, err
+	}
+	id, err:= result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), nil
+
+}
+*/

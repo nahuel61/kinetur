@@ -28,9 +28,11 @@
                 <div class="navbar-nav">
                     <a class="nav-link active" href='/'>Inicio</a>
                     {{if .AuthenticatedUser}}
+                        <form action='/user/logout' method='POST'>
                         <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
-                        <a class="nav-link" href="/user/logout">Cerrar Sesion ({{.AuthenticatedUser.Nombre}})</a>
+                        <a class="nav-link" href="/user/logout">Cerrar Sesion ({{.AuthenticatedUser.Nombres}})</a>
                         <a href="/user/logout" onclick="signOut();">Sign out</a>
+                        </form>
                     {{else}}
                         <a class="nav-link" href="/user/signup">Registrarse</a>
                         <a class="nav-link" href="/user/login">Iniciar Sesion</a>

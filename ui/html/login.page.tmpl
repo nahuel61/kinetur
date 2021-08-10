@@ -1,5 +1,7 @@
 {{template "base" .}}
+
 {{define "title"}}Login{{end}}
+
 {{define "body"}}
 <form action='/user/login' method='POST' novalidate>
     <!-- incluyo CSRFtoken -->
@@ -21,8 +23,8 @@
         <div>
             <input type='submit' value='Iniciar Sesion'>
         </div>
-        <p> o accede con Google:</p>
-        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+       <!--  <p> o accede con Google:</p>-->
+        <!-- <div class="g-signin2" data-onsuccess="onSignIn"></div>-->
 
     {{end}}
 </form>

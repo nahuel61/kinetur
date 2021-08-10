@@ -16,6 +16,8 @@ type templateData struct {
 	Paciente          *models.Pacientes
 	Pacientes         []*models.Pacientes
 	AuthenticatedUser *models.Pacientes
+	Profesional       *models.Profesionales
+	Profesionales     []*models.Profesionales
 	CSRFToken         string
 }
 

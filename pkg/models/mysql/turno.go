@@ -4,7 +4,7 @@ import (
 	"database/sql"
 )
 
-//tomo la conexion a db
+// TurnoModel tomo la conexion a db
 type TurnoModel struct {
 	DB *sql.DB
 }

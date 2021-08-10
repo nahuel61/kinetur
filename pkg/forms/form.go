@@ -13,13 +13,13 @@ import (
 // EmailRX expresion regular para el campo de email
 var EmailRX = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9]")
 
-//creo una estructura de formulario para guardar valores y errores
+// Form creo una estructura de formulario para guardar valores y errores
 type Form struct {
 	url.Values
 	Errors errors
 }
 
-// Inicializo un nuevo formulario
+// New Inicializo un nuevo formulario
 func New(data url.Values) *Form {
 	return &Form{
 		data,

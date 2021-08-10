@@ -6,8 +6,8 @@ import (
 	"flag"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golangcollege/sessions"
-	_ "golang.org/x/oauth2/google"
-	_ "google.golang.org/api/calendar/v3"
+	//_ "golang.org/x/oauth2/google"
+	//_ "google.golang.org/api/calendar/v3"
 	"html/template"
 	"log"
 	"net/http"
@@ -18,7 +18,7 @@ import (
 
 type contextKey string
 
-var contextKeyUser = contextKey("usuario")
+var contextKeyUser = contextKey("paciente")
 
 type application struct {
 	errorLog      *log.Logger
@@ -97,7 +97,7 @@ func main() {
 
 	//defino la direccion default
 	dsn := flag.String("dsn", "root:admin@/kinetur?parseTime=true", "Mysql data")
-	addr := flag.String("addr", ":4000", "HTTP network address")
+	addr := flag.String("addr", ":4000", "HTTPS network address")
 
 	//agrego autenticacion
 	secret := flag.String("secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret key")
@@ -127,16 +127,20 @@ func main() {
 	}
 	//creo un nuevo session manager y le paso la clave secret como parametro. la sesion expira a las 6 horas
 	session := sessions.New([]byte(*secret))
-	session.Lifetime = 6 * time.Hour
+	session.Lifetime = 10 * time.Minute
 	session.Secure = true
+	session.Persist = false //cierra el explorador y se pierda la cookie
+	session.SameSite = http.SameSiteStrictMode
 
 	app := &application{
 		errorLog:      errorLog,
 		infoLog:       infoLog,
-		pacientes:     &mysql.PacientesModel{DB: db},
-		templateCache: templateCache,
 		session:       session,
-		turnos:        &mysql.TurnoModel{DB: db},
+		pacientes:     &mysql.PacientesModel{DB: db},
+		profesional:   &mysql.ProfesionalesModel{DB: db},
+		templateCache: templateCache,
+
+		turnos: &mysql.TurnoModel{DB: db},
 	}
 
 	// Initialize a tls.Config struct to hold the non-default TLS settings we want the server to use.
@@ -152,13 +156,13 @@ func main() {
 		Handler:      app.routes(),
 		TLSConfig:    tlsConfig,
 		IdleTimeout:  time.Minute,
-		ReadTimeout:  5 * time.Second,
+		ReadTimeout:  5 * time.Second, //previene ataques de cliente lento (mantiene abierta la conexxcion la mas que pueda)
 		WriteTimeout: 10 * time.Second,
 	}
 
 	//escribo los mensajes de info y error en cada uno de los logs
 	infoLog.Printf("Inicio el servidor en https://localhost%s", *addr)
-	//agrego certificacion de seguridad tls
+	//agrego certificacion de seguridad tls para iniciar servidor https
 	err = srv.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	errorLog.Fatal(err)
 

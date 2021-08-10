@@ -4,16 +4,17 @@ import (
 	"database/sql"
 	"github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
+	"regexp"
 	"strings"
 	"tp-ISA-go.org/kinetur/pkg/models"
 )
 
-//tomo la conexion a db
+// PacientesModel tomo la conexion a db
 type PacientesModel struct {
 	DB *sql.DB
 }
 
-// inserto nuevo paciente en la db
+// Insert inserto nuevo paciente en la db
 func (m *PacientesModel) Insert(dni, nombres, apellidos, direccion, email, password string) error {
 	// Create a bcrypt hash of the plain-text password. nahuel1234
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), 6)
@@ -33,7 +34,7 @@ func (m *PacientesModel) Insert(dni, nombres, apellidos, direccion, email, passw
 	return err
 }
 
-// Usaremos el método Authenticate para verificar si un paciente existe con
+// Authenticate Usaremos el método Authenticate para verificar si un paciente existe con
 // la dirección de correo electrónico y la contraseña proporcionadas.
 //Esto devolverá el ID (DNI) de usuario si lo hacen.
 func (m *PacientesModel) Authenticate(email, password string) (int, error) {
@@ -46,7 +47,7 @@ func (m *PacientesModel) Authenticate(email, password string) (int, error) {
 	} else if err != nil {
 		return 0, err
 	}
-	// Valida el hash del pass
+	// Valida el hash del pass, si no coinciden tira errinvalidcredentials
 	err = bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
 	if err == bcrypt.ErrMismatchedHashAndPassword {
 		return 0, models.ErrInvalidCredentials
@@ -68,4 +69,16 @@ func (m *PacientesModel) Get(id int) (*models.Pacientes, error) {
 		return nil, err
 	}
 	return s, nil
+}
+func validEmail(email string) bool {
+	// Validar el formato de la direccion de email.
+	var re = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+	return re.MatchString(email) && len(email) <= 100
+}
+
+func validPassword(pass string) bool {
+	return len(pass) >= 6
+}
+func validDNI(dni string) bool {
+	return len(dni) == 8
 }

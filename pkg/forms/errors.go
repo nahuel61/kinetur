@@ -4,12 +4,12 @@ package forms
 
 type errors map[string][]string
 
-// Implemento el metodo Add() para agregar un mensaje de rror a un campo dadoa map
+// Add Implemento el metodo Add() para agregar un mensaje de rror a un campo dadoa map
 func (e errors) Add(field, message string) {
 	e[field] = append(e[field], message)
 }
 
-// Implemento el metodo Get() para recuperar el primer mensaje de errar para un campo dado
+// Get Implemento el metodo Get() para recuperar el primer mensaje de errar para un campo dado
 func (e errors) Get(field string) string {
 	es := e[field]
 	if len(es) == 0 {

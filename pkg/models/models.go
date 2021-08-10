@@ -13,25 +13,24 @@ var (
 )
 
 type Pacientes struct {
-	DNI       string `json:"dni"`
-	Nombres   string `json:"nombre"`
-	Apellidos string `json:"apellido"`
+	DNI       int    `json:"dni"`
+	Nombres   string `json:"nombres"`
+	Apellidos string `json:"apellidos"`
 	Direccion string `json:"direccion"`
 	Email     string `json:"email"`
 	Password  []byte `json:"password"`
 }
 
 type Especialidades struct {
-	Id      int    `json:"id"`
-	Nombres string `json:"nombre"`
+	Id     int    `json:"id"`
+	Nombre string `json:"nombre"`
 }
 
-type Profesional struct {
+type Profesionales struct {
 	Id           int    `json:"id"`
-	DNI          string `json:"dni"`
-	Nombres      string `json:"nombre"`
-	Apellidos    string `json:"apellido"`
-	Direccion    string `json:"direccion"`
+	DNI          int    `json:"dni"`
+	Nombres      string `json:"nombres"`
+	Apellidos    string `json:"apellidos"`
 	Especialidad string `json:"especialidad"`
 }
 
@@ -50,7 +49,7 @@ type Dias struct {
 
 type Citas struct {
 	Id            int       `json:"id"`
-	PacienteDNI   string    `json:"paciente_dni"`
+	PacienteDNI   int       `json:"paciente_dni"`
 	ProfesionalId string    `json:"profesional_id"`
 	Fecha         time.Time `json:"fecha"`
 }
