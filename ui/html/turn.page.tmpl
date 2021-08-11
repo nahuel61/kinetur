@@ -15,7 +15,7 @@
             <p>Lista de turnos disponibles </p>
             <label for="fecha">Fecha*</label>
            <label for="party">Selecciones dia y horario de atencion:</label>
-           <input id="party" type="datetime-local" name="partydate"  >
+           <input id="party" type="datetime-local" name="turnofecha" value='{{.Get "fecha"}}'  >
         <div>
             <input type='submit' value='Agendar Turno'>
         </div>

@@ -23,11 +23,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c69d8b68-df1b-4d17-a432-a40526bd3496" name="Default Changelist" comment="direcciones desde la api places de google">
+      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/web/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/web/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/web/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/web/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/web/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/web/routes.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/models/mysql/turno.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/models/mysql/turno.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/web/templates.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/web/templates.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/models/mysql/profesionales.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/models/mysql/profesionales.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ui/html/turn.page.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/ui/html/turn.page.tmpl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,7 +61,7 @@
     </file-type-list>
   </component>
   <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="2628c8bf-d677-4983-8bdd-7c6f4a8122aa" />
+    <option name="defaultAccountId" value="383bfcd1-13b2-44e9-a7a9-deb3f497db68" />
   </component>
   <component name="ProjectId" id="1gNJ5mPEi4lT06kwjKysNoLsbwe" />
   <component name="ProjectLevelVcsManager">

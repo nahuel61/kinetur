@@ -20,6 +20,8 @@ type templateData struct {
 	Profesional       *models.Profesionales
 	Profesionales     []*models.Profesionales
 	CSRFToken         string
+	Turno             *models.Citas
+	Turnos            []*models.Citas
 }
 
 func humanDate(t time.Time) string {

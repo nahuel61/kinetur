@@ -34,9 +34,7 @@ func (m *ProfesionalesModel) Get(id int) (*models.Profesionales, error) {
 }
 
 func (m *ProfesionalesModel) Del(id int) error {
-	stmt := "DELETE from kinetur.Profesional where id=?"
-
-	_, err := m.DB.Exec(stmt, id)
+	_, err := m.DB.Exec("DELETE from kinetur.Profesional where id=?", id)
 	if err != nil {
 		return err
 	}
