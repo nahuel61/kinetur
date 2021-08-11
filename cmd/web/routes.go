@@ -24,6 +24,7 @@ func (app *application) routes() http.Handler {
 	mux.Get("/user/logout", dynamicMiddleware.ThenFunc(app.logoutUser))
 
 	mux.Get("/user/turno", dynamicMiddleware.ThenFunc(app.turnoList))
+	mux.Post("/user/turno", dynamicMiddleware.ThenFunc(app.guardarTurno))
 
 	//routes de la API
 	mux.Get("/pacientes", dynamicMiddleware.ThenFunc(app.userList))

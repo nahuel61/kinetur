@@ -210,34 +210,33 @@ func (app *application) removeProfesional(w http.ResponseWriter, r *http.Request
 	// Manejador que dada una peticion con el id en la URI, elimina al usuario y devuelve un 200 vacío.
 	userID, err := strconv.Atoi(r.URL.Query().Get(":id"))
 	_, err = app.profesional.DB.Exec("delete from kinetur.Profesional where id = ?", userID)
-	if err != nil && err.Error() == "record not found" {
-		app.clientError(w, 404)
-		return
-	} else if err != nil {
+	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 	fmt.Fprintf(w, "Profesional eliminado")
 }
 
-//func onSignIn(googleUser) {
-//const googleJWT = googleUser.getAuthResponse().id_token
-//}
-/*func (m *ProfesionalesModel) Insert(DNI int, nombres string, apellidos string, especialidad int) (int,error) {
-	// Create a bcrypt hash of the plain-text password. nahuel1234
-
-	stmt := "INSERT INTO kinetur.Profesional (DNI,nombres, apellidos, especialidad_id) VALUES(?,?,?,?)"
-
-	result, err := m.DB.Exec(stmt, DNI, nombres, apellidos, especialidad )
+func (app *application) guardarTurno(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return 0, err
+		app.serverError(w, err)
+		return
 	}
-	id, err:= result.LastInsertId()
+	stmt, err := app.turnos.DB.Prepare("INSERT INTO kinetur.Citas (paciente_DNI,profesional_id,fecha) VALUES(?,?,?)")
 	if err != nil {
-		return 0, err
+		app.serverError(w, err)
 	}
+	keyVal := make(map[string]string)
+	json.Unmarshal(body, &keyVal)
+	pacienteDni := 35478987
+	profesionalId := 2
+	fecha := keyVal["fecha"]
 
-	return int(id), nil
+	_, err = stmt.Exec(pacienteDni, profesionalId, fecha)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	fmt.Fprintf(w, "Turno guardado")
 
 }
-*/
