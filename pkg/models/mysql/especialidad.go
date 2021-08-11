@@ -11,7 +11,6 @@ type EspecialidadModel struct {
 
 func (m *EspecialidadModel) Insert(nombre string) error {
 	stmt := "INSERT INTO kinetur.Especialidades (nombre) VALUES(?)"
-
 	_, err := m.DB.Exec(stmt, nombre)
 	if err != nil {
 		return err
@@ -28,4 +27,11 @@ func (m *EspecialidadModel) Get(id int) (*models.Especialidades, error) {
 		return nil, err
 	}
 	return s, nil
+}
+func (m *EspecialidadModel) Delete(id int) error {
+	_, err := m.DB.Exec("DELETE from kinetur.Especialidades where id=?", id)
+	if err != nil {
+		return err
+	}
+	return err
 }
