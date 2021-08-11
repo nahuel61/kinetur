@@ -33,7 +33,9 @@
             {{with .Errors.Get "direccion"}}
             <td> <label class='error'>{{.}}</label></td>
             {{end}}
-            <td> <input type='text' name='direccion' value='{{.Get "direccion"}}'></td>
+            <td> <input type='text' id="txtPlaces" name='direccion' value='{{.Get "direccion"}}'></td>
+            <input type="hidden" id="loc_lat" />
+            <input type="hidden" id="loc_long" />
         </tr>
         <tr>
             <td>  <label>Email:</label></td>
@@ -50,7 +52,6 @@
             <td>  <input type='password' name='password'></td>
         </tr>
     </table>
-    <div>
         <input type='submit' value='Registrarse'>
     </div>
     {{end}}

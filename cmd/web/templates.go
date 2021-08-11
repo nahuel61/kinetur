@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"path/filepath"
+	"time"
 	_ "time"
 	"tp-ISA-go.org/kinetur/pkg/forms"
 	"tp-ISA-go.org/kinetur/pkg/models"
@@ -19,6 +20,15 @@ type templateData struct {
 	Profesional       *models.Profesionales
 	Profesionales     []*models.Profesionales
 	CSRFToken         string
+}
+
+func humanDate(t time.Time) string {
+	// Return the empty string if time has the zero value.
+	if t.IsZero() {
+		return ""
+	}
+	// Convert the time to UTC before formatting it.
+	return t.UTC().Format("02 Jan 2006 at 15:04")
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {

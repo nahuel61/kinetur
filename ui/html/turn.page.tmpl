@@ -8,13 +8,14 @@
                 {{with .Errors.Get "generic"}}
                     <div class='error'>{{.}}</div>
                 {{end}}
-
-
         <div class="container">
         <div class="container-lg align-self-auto">
             <p>Lista de turnos disponibles </p>
             <label for="fecha">Fecha*</label>
             <input type="text" name="slider_example_2" id="slider_example_2" class="text ui-widget-content ui-corner-all" value='{{.Get "slider_example_2"}}'/>
+        <table  id="tabla_epp" class="table table-striped table-bordered" style="width:100%">
+
+
         <div>
             <input type='submit' value='Agendar Turno'>
         </div>

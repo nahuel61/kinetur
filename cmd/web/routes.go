@@ -8,10 +8,10 @@ import (
 
 func (app *application) routes() http.Handler {
 	//creacion del middleware que registra todos los "movimientos"
-	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
+	standardMiddleware := alice.New(app.logRequest)
 	//agrego un middleware dinamico para que tome la session. en el otro me quedan los archivos estaticos
 	//no surf evita el crsf
-	dynamicMiddleware := alice.New(app.session.Enable, noSurf, app.authenticate)
+	dynamicMiddleware := alice.New(app.session.Enable, app.authenticate)
 	//pat sigue el orden
 	//es mas complicado al principio pero cuando crezca al applicacion es mas facil manejar asi los logs de errores
 	mux := pat.New()
@@ -28,11 +28,14 @@ func (app *application) routes() http.Handler {
 	//routes de la API
 	mux.Get("/pacientes", dynamicMiddleware.ThenFunc(app.userList))
 	mux.Get("/profesionales", dynamicMiddleware.ThenFunc(app.profesionalesLista))
-	mux.Post("/profesionales", dynamicMiddleware.ThenFunc(app.addProfesional))
+	mux.Post("/profesionales", http.HandlerFunc(app.addProfesional))
+	mux.Del("/profesionales/:id", http.HandlerFunc(app.removeProfesional))
 
 	//crea un servidor de archivos estaticos q estan alojados en ./iu/static
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	mux.Get("/static/", http.StripPrefix("/static", fileServer))
+	//ruta para test de handlre si la saco el test demuetra q falla
+	mux.Get("/ping", http.HandlerFunc(ping))
 
 	return standardMiddleware.Then(mux)
 }

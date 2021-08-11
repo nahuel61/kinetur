@@ -10,11 +10,27 @@
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" integrity="sha512-LT9fy1J8pE4Cy6ijbg96UkExgOjCqcxAC7xsnv+mLJxSvftGVmmc236jlPTZXPcBRQcVOWoK1IJhb1dAjtb4lQ==" crossorigin="anonymous" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/i18n/jquery-ui-timepicker-addon-i18n.min.js" integrity="sha512-t2ZIJH81Sh+SWSb4BuA9en4j6fwja+sYOEXbqoepD9lJ+efUGD94gSWqdmgQchGmPez2ojECq4Fm6bKMUAzIiQ==" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js" integrity="sha512-s5u/JBtkPg+Ff2WEr49/cJsod95UgLHbC00N/GglqdQuLnYhALncz8ZHiW/LxDRGduijLKzeYb7Aal9h3codZA==" crossorigin="anonymous"></script>
-        <script src="https://apis.google.com/js/platform.js" async defer></script>
-        <meta name="google-signin-client_id" content="979995675320-ssm48s9m7at53t7ta9pm4rg4kkkbtfs8.apps.googleusercontent.com">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyCcrDFK0l297GuSnTLh1FzdFVrpAoGxM9I"></script>
+<script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
+    <script type="text/javascript">
+        google.maps.event.addDomListener(window, 'load', function () {
+            var places = new google.maps.places.Autocomplete(document.getElementById('txtPlaces'));
+            google.maps.event.addListener(places, 'place_changed', function () {
+                var place = places.getPlace();
+                var address = place.formatted_address;
+                var latitude = place.geometry.location.A;
+                var longitude = place.geometry.location.F;
+                var mesg = "Address: " + address;
+                mesg += "\nLatitude: " + latitude;
+                mesg += "\nLongitude: " + longitude;
+                alert(mesg);
+            });
+        });
+    </script>
+</script>
+
     </head>
     <body>
     <div class="container">
@@ -31,7 +47,7 @@
                         <form action='/user/logout' method='POST'>
                         <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
                         <a class="nav-link" href="/user/logout">Cerrar Sesion ({{.AuthenticatedUser.Nombres}})</a>
-                        <a href="/user/logout" onclick="signOut();">Sign out</a>
+
                         </form>
                     {{else}}
                         <a class="nav-link" href="/user/signup">Registrarse</a>

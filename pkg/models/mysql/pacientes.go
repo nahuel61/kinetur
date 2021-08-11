@@ -61,7 +61,7 @@ func (m *PacientesModel) Authenticate(email, password string) (int, error) {
 //esta funcion la usa el middleware
 func (m *PacientesModel) Get(id int) (*models.Pacientes, error) {
 	s := &models.Pacientes{}
-	stmt := `SELECT dni, nombres, email, created FROM Pacientes WHERE dni = ?`
+	stmt := `SELECT dni, nombres, email FROM Pacientes WHERE dni = ?`
 	err := m.DB.QueryRow(stmt, id).Scan(&s.DNI, &s.Nombres, &s.Email)
 	if err == sql.ErrNoRows {
 		return nil, models.ErrNoRecord

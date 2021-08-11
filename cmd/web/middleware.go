@@ -27,6 +27,7 @@ func (app *application) logRequest(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
 func (app *application) requireAuthenticatedUser(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Si el usuario no esta autenticado se lo redirecciona al login
@@ -46,7 +47,7 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 		defer func() {
 			if err := recover(); err != nil {
 				w.Header().Set("Connection", "close")
-				app.serverError(w, fmt.Errorf("Que carajos %s", err))
+				app.serverError(w, fmt.Errorf(" %s", err))
 			}
 		}()
 		next.ServeHTTP(w, r)
@@ -84,4 +85,36 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), contextKeyUser, user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func (app *application) withCORS(next http.Handler) http.Handler {
+	// para mostrar por la salida de log cada request que se le haga al server
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// La peticion debe venir de un origen determinado, no vale *
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:4000")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		// Stop here for a Preflighted OPTIONS request.
+		next.ServeHTTP(w, r)
+	})
+}
+
+func (app *application) authenticateUser(r *http.Request) bool {
+	var email = app.session.GetString(r, "email")
+	if len(email) <= 0 {
+		return false
+	}
+	return true
+}
+
+func (app *application) restrictedEndpoint(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !app.authenticateUser(r) {
+			app.clientError(w, 401) //unauthorized
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+
 }

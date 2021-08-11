@@ -187,7 +187,7 @@ func (app *application) addProfesional(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	stmt, err := app.pacientes.DB.Prepare("INSERT INTO kinetur.Profesional (DNI,nombres, apellidos, especialidad_id) VALUES(?,?,?,?)")
+	stmt, err := app.profesional.DB.Prepare("INSERT INTO kinetur.Profesional (DNI,nombres, apellidos, especialidad_id) VALUES(?,?,?,?)")
 	if err != nil {
 		app.serverError(w, err)
 	}
@@ -204,6 +204,20 @@ func (app *application) addProfesional(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "Nuevo profesional agregado")
 
+}
+
+func (app *application) removeProfesional(w http.ResponseWriter, r *http.Request) {
+	// Manejador que dada una peticion con el id en la URI, elimina al usuario y devuelve un 200 vacío.
+	userID, err := strconv.Atoi(r.URL.Query().Get(":id"))
+	_, err = app.profesional.DB.Exec("delete from kinetur.Profesional where id = ?", userID)
+	if err != nil && err.Error() == "record not found" {
+		app.clientError(w, 404)
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	fmt.Fprintf(w, "Profesional eliminado")
 }
 
 //func onSignIn(googleUser) {

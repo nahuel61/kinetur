@@ -11,7 +11,7 @@ type ProfesionalesModel struct {
 	DB *sql.DB
 }
 
-func (m *ProfesionalesModel) Insert(dni string, nombres string, apellidos string, especialidad string) error {
+func (m *ProfesionalesModel) Insert(dni, nombres, apellidos, especialidad string) error {
 	stmt := "INSERT INTO kinetur.Profesional (dni,nombres, apellidos, especialidad_id) VALUES(?,?,?,?)"
 
 	_, err := m.DB.Exec(stmt, dni, nombres, apellidos, especialidad)
@@ -31,6 +31,16 @@ func (m *ProfesionalesModel) Get(id int) (*models.Profesionales, error) {
 		return nil, err
 	}
 	return s, nil
+}
+
+func (m *ProfesionalesModel) Del(id int) error {
+	stmt := "DELETE from kinetur.Profesional where id=?"
+
+	_, err := m.DB.Exec(stmt, id)
+	if err != nil {
+		return err
+	}
+	return err
 }
 
 func validUsername(username string) bool {
