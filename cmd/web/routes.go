@@ -33,6 +33,7 @@ func (app *application) routes() http.Handler {
 	mux.Del("/profesionales/:id", http.HandlerFunc(app.removeProfesional))
 	mux.Get("/especialidades", dynamicMiddleware.ThenFunc(app.especialidadesLista))
 	mux.Post("/especialidades", http.HandlerFunc(app.addEspecialidad))
+	mux.Del("/especialidades/:id", http.HandlerFunc(app.removeEspecialidad))
 
 	//crea un servidor de archivos estaticos q estan alojados en ./iu/static
 	fileServer := http.FileServer(http.Dir("./ui/static/"))

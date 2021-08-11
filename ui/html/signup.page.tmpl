@@ -1,6 +1,10 @@
 {{template "base" .}}
 {{define "title"}}Registrarse{{end}}
 {{define "body"}}
+<div class="container">
+        <div class="container-lg align-self-auto">
+            <div class="row align-items-stretch " style="margin-top: 20px">
+                <div class="col-lg-3 d-flex align-items-stretch">
 <form action='/user/signup' method='POST' novalidate>
 <!-- Include the CSRF token -->
 <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
@@ -8,52 +12,61 @@
     <table>
        <tr>
             <td> <label>DNI:</label></td>
-            {{with .Errors.Get "DNI"}}
+            <td>  <input type='text' name='dni' value='{{.Get "DNI"}}'placeholder="Ingrese DNI sin puntos"></td>
+            {{with .Errors.Get "dni"}}
             <td><label class='error'>{{.}}</label></td>
             {{end}}
-            <td>  <input type='text' name='dni' value='{{.Get "DNI"}}'></td>
+
             </tr>
         <tr>
             <td><label>Nombres:</label></td>
+            <td><input type='text' name='nombres' value='{{.Get "nombres"}}'placeholder="Ingrese sus nombres"></td>
             {{with .Errors.Get "nombres"}}
             <td><label class='error'>{{.}}</label></td>
             {{end}}
-            <td><input type='text' name='nombres' value='{{.Get "nombres"}}'></td>
+
         </tr>
         <tr>
             <td> <label>Apellidos:</label></td>
+            <td>  <input type='text' name='apellidos' value='{{.Get "apellidos"}}'placeholder="Ingrese sus apellidos"></td>
             {{with .Errors.Get "apellidos"}}
             <td>     <label class='error'>{{.}}</label></td>
             {{end}}
-            <td>  <input type='text' name='apellidos' value='{{.Get "apellidos"}}'></td>
+
         </tr>
 
         <tr>
             <td>  <label>Direccion:</label></td>
-            {{with .Errors.Get "direccion"}}
-            <td> <label class='error'>{{.}}</label></td>
-            {{end}}
             <td> <input type='text' id="txtPlaces" name='direccion' value='{{.Get "direccion"}}'></td>
             <input type="hidden" id="loc_lat" />
             <input type="hidden" id="loc_long" />
+            {{with .Errors.Get "direccion"}}
+                        <td> <label class='error'>{{.}}</label></td>
+                        {{end}}
         </tr>
         <tr>
             <td>  <label>Email:</label></td>
-            {{with .Errors.Get "email"}}
+             <td>  <input type='email' name='email' value='{{.Get "email"}}'placeholder="Ingrese su email"></td>
+             {{with .Errors.Get "email"}}
             <td> <label class='error'>{{.}}</label></td>
             {{end}}
-            <td>  <input type='email' name='email' value='{{.Get "email"}}'></td>
+
         </tr>
         <tr>
             <td>    <label>Password:</label></td>
+            <td>  <input type='password' name='password' placeholder="8 caracteres minimo"></td>
             {{with .Errors.Get "password"}}
             <td>  <label class='error'>{{.}}</label></td>
             {{end}}
-            <td>  <input type='password' name='password'></td>
+
         </tr>
     </table>
         <input type='submit' value='Registrarse'>
     </div>
     {{end}}
 </form>
+ </div>
+            </div>
+        </div>
+    </div>
 {{end}}

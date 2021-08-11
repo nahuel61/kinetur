@@ -3,6 +3,10 @@
 {{define "title"}}Login{{end}}
 
 {{define "body"}}
+<div class="container">
+        <div class="container-lg align-self-auto">
+            <div class="row align-items-stretch " style="margin-top: 20px">
+                <div class="col-lg-3 d-flex align-items-stretch">
 <form action='/user/login' method='POST' novalidate>
     <!-- incluyo CSRFtoken -->
         <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
@@ -28,6 +32,10 @@
 
     {{end}}
 </form>
+        </div>
+            </div>
+        </div>
+    </div>
 
 <script>
 function onSignIn(googleUser) {

@@ -253,7 +253,16 @@ func (app *application) addEspecialidad(w http.ResponseWriter, r *http.Request) 
 		app.serverError(w, err)
 	}
 	fmt.Fprintf(w, "Nueva especialidad agregada %s", nombre)
-
+}
+func (app *application) removeEspecialidad(w http.ResponseWriter, r *http.Request) {
+	// Manejador que dada una peticion con el id en la URI, elimina al usuario y devuelve un 200 vacío.
+	userID, err := strconv.Atoi(r.URL.Query().Get(":id"))
+	_, err = app.profesional.DB.Exec("delete from kinetur.Profesional where id = ?", userID)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	fmt.Fprintf(w, "Profesional eliminado")
 }
 
 /*
