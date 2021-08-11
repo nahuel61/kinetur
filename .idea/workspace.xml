@@ -24,11 +24,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c69d8b68-df1b-4d17-a432-a40526bd3496" name="Default Changelist" comment="bd en ip externa">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/web/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/web/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/web/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/web/routes.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/html/footer.partial.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/ui/html/footer.partial.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/html/login.page.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/ui/html/login.page.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/html/signup.page.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/ui/html/signup.page.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/models/mysql/pacientes_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/models/mysql/pacientes_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,25 +157,25 @@
       <pattern value="^\QTestSignupUser\E$/^\QEmpty_name\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestSignupUser/Valid_submission in tp-ISA-go.org/kinetur/cmd/web" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestValidEmail in tp-ISA-go.org/kinetur/pkg/models/mysql" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="kinetur" />
-      <working_directory value="$PROJECT_DIR$/cmd/web" />
+      <working_directory value="$PROJECT_DIR$/pkg/models/mysql" />
       <root_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
-      <package value="tp-ISA-go.org/kinetur/cmd/web" />
+      <package value="tp-ISA-go.org/kinetur/pkg/models/mysql" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestSignupUser\E$/^\QValid_submission\E$" />
+      <pattern value="^\QTestValidEmail\E$" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build tp-ISA-go.org/kinetur/cmd/web" />
+        <item itemvalue="Go Test.TestValidEmail in tp-ISA-go.org/kinetur/pkg/models/mysql" />
         <item itemvalue="Go Test.TestPing in tp-ISA-go.org/kinetur/cmd/web" />
         <item itemvalue="Go Test.TestSignupUser in tp-ISA-go.org/kinetur/cmd/web" />
         <item itemvalue="Go Test.TestSignupUser/Empty_name in tp-ISA-go.org/kinetur/cmd/web" />
-        <item itemvalue="Go Test.TestSignupUser/Valid_submission in tp-ISA-go.org/kinetur/cmd/web" />
       </list>
     </recent_temporary>
   </component>
