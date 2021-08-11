@@ -19,7 +19,7 @@ create table Especialidades (
 
 create table Profesional (
                        id int NOT NULL PRIMARY KEY auto_increment,
-                       DNI int NOT NULL,
+                       DNI char(8) NOT NULL,
                        nombres VARCHAR(30) NOT NULL,
                        apellidos VARCHAR(30) NOT NULL,
                        especialidad_id int,

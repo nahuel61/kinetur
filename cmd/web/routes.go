@@ -24,13 +24,15 @@ func (app *application) routes() http.Handler {
 	mux.Get("/user/logout", dynamicMiddleware.ThenFunc(app.logoutUser))
 
 	mux.Get("/user/turno", dynamicMiddleware.ThenFunc(app.turnoList))
-	mux.Post("/user/turno", dynamicMiddleware.ThenFunc(app.guardarTurno))
+	//mux.Post("/user/turno", dynamicMiddleware.ThenFunc(app.guardarTurno))
 
 	//routes de la API
 	mux.Get("/pacientes", dynamicMiddleware.ThenFunc(app.userList))
 	mux.Get("/profesionales", dynamicMiddleware.ThenFunc(app.profesionalesLista))
 	mux.Post("/profesionales", http.HandlerFunc(app.addProfesional))
 	mux.Del("/profesionales/:id", http.HandlerFunc(app.removeProfesional))
+	mux.Get("/especialidades", dynamicMiddleware.ThenFunc(app.especialidadesLista))
+	mux.Post("/especialidades", http.HandlerFunc(app.addEspecialidad))
 
 	//crea un servidor de archivos estaticos q estan alojados en ./iu/static
 	fileServer := http.FileServer(http.Dir("./ui/static/"))

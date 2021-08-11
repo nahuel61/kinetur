@@ -27,13 +27,14 @@ type application struct {
 	profesional   *mysql.ProfesionalesModel
 	templateCache map[string]*template.Template
 	session       *sessions.Session //agrego sesion a la struc
+	especialidad  *mysql.EspecialidadModel
 	turnos        *mysql.TurnoModel
 }
 
 func main() {
 
 	//defino la direccion default
-	dsn := flag.String("dsn", "root:admin@/kinetur?parseTime=true", "Mysql data")
+	dsn := flag.String("dsn", "root:admin@(147.182.208.215)/kinetur?parseTime=true", "Mysql data")
 	addr := flag.String("addr", ":4000", "HTTPS network address")
 
 	//agrego autenticacion
@@ -75,6 +76,7 @@ func main() {
 		pacientes:     &mysql.PacientesModel{DB: db},
 		profesional:   &mysql.ProfesionalesModel{DB: db},
 		templateCache: templateCache,
+		especialidad:  &mysql.EspecialidadModel{DB: db},
 		turnos:        &mysql.TurnoModel{DB: db},
 	}
 

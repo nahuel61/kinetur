@@ -217,6 +217,46 @@ func (app *application) removeProfesional(w http.ResponseWriter, r *http.Request
 	fmt.Fprintf(w, "Profesional eliminado")
 }
 
+func (app *application) especialidadesLista(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var especialidades []models.Especialidades
+	result, err := app.especialidad.DB.Query("SELECT * FROM kinetur.Especialidades ")
+	if err != nil {
+		app.serverError(w, err)
+	}
+	defer result.Close()
+	for result.Next() {
+		var prof models.Especialidades
+		err := result.Scan(&prof.Id, &prof.Nombre)
+		if err != nil {
+			app.serverError(w, err)
+		}
+		especialidades = append(especialidades, prof)
+	}
+	json.NewEncoder(w).Encode(especialidades)
+}
+func (app *application) addEspecialidad(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	stmt, err := app.especialidad.DB.Prepare("INSERT INTO kinetur.Especialidades (nombre) VALUES(?)")
+	if err != nil {
+		app.serverError(w, err)
+	}
+	keyVal := make(map[string]string)
+	json.Unmarshal(body, &keyVal)
+	nombre := keyVal["nombre"]
+	_, err = stmt.Exec(nombre)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	fmt.Fprintf(w, "Nueva especialidad agregada %s", nombre)
+
+}
+
+/*
 func (app *application) guardarTurno(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -240,3 +280,4 @@ func (app *application) guardarTurno(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Turno guardado")
 
 }
+*/
